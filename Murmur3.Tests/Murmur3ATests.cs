@@ -55,6 +55,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
 #pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable SA1114 // Parameter list should follow declaration
         "81F16F39",
+        //// ReSharper disable once StyleCop.SA1118
 #pragma warning restore SA1114 // Parameter list should follow declaration
 #pragma warning restore IDE0079 // Remove unnecessary suppression
         Array.Empty<byte>(),
@@ -73,8 +74,10 @@ public sealed class Murmur3ATests : Murmur3TestsBase
 #pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable SA1114 // Parameter list should follow declaration
         "76293B50",
+        //// ReSharper disable once StyleCop.SA1118
 #pragma warning restore SA1114 // Parameter list should follow declaration
 #pragma warning restore IDE0079 // Remove unnecessary suppression
+        //// ReSharper disable once StyleCop.SA1502
         new[] { (byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF },
         "make sure 4-byte chunks use unsigned math");
 
@@ -84,6 +87,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     [TestMethod]
     public void Test21436587InputSeed0() => this.Test(
         "F55B516B",
+        //// ReSharper disable once StyleCop.SA1502
         new[] { (byte)0x21, (byte)0x43, (byte)0x65, (byte)0x87 },
         "Endian order. UInt32 should end up as 0x87654321");
 
@@ -99,8 +103,10 @@ public sealed class Murmur3ATests : Murmur3TestsBase
 #pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable SA1114 // Parameter list should follow declaration
         "2362F9DE",
+        //// ReSharper disable once StyleCop.SA1118
 #pragma warning restore SA1114 // Parameter list should follow declaration
 #pragma warning restore IDE0079 // Remove unnecessary suppression
+        //// ReSharper disable once StyleCop.SA1502
         new[] { (byte)0x21, (byte)0x43, (byte)0x65, (byte)0x87 },
         "Special seed value eliminates initial key with xor",
         0x5082EDEE);
@@ -111,6 +117,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     [TestMethod]
     public void Test214365InputSeed0() => this.Test(
         "7E4A8634",
+        //// ReSharper disable once StyleCop.SA1502
         new[] { (byte)0x21, (byte)0x43, (byte)0x65 },
         "Only three bytes. Should end up as 0x654321");
 
@@ -120,6 +127,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     [TestMethod]
     public void Test2143InputSeed0() => this.Test(
         "A0F7B07A",
+        //// ReSharper disable once StyleCop.SA1502
         new[] { (byte)0x21, (byte)0x43 },
         "Only two bytes. Should end up as 0x4321");
 
@@ -128,6 +136,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// </summary>
     [TestMethod]
     public void Test21InputSeed0() =>
+        //// ReSharper disable once StyleCop.SA1502
         this.Test("72661CF4", new[] { (byte)0x21 }, "Only one byte. Should end up as 0x21");
 
     /// <summary>
@@ -170,6 +179,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
 #pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable SA1114 // Parameter list should follow declaration
         "3BF7E870",
+        //// ReSharper disable once StyleCop.SA1118
 #pragma warning restore SA1114 // Parameter list should follow declaration
 #pragma warning restore IDE0079 // Remove unnecessary suppression
         //// ReSharper disable StringLiteralTypo
@@ -196,6 +206,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
 #pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable SA1114 // Parameter list should follow declaration
         "2FA826CD",
+        //// ReSharper disable once StyleCop.SA1118
 #pragma warning restore SA1114 // Parameter list should follow declaration
 #pragma warning restore IDE0079 // Remove unnecessary suppression
         "The quick brown fox jumps over the lazy dog",
@@ -212,6 +223,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
 #pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable SA1114 // Parameter list should follow declaration
         "75B422D6",
+        //// ReSharper disable once StyleCop.SA1118
 #pragma warning restore SA1114 // Parameter list should follow declaration
 #pragma warning restore IDE0079 // Remove unnecessary suppression
         "The quick brown fox jumps over the lazy dog",

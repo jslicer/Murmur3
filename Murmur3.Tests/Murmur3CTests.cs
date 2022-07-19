@@ -48,6 +48,7 @@ public sealed class Murmur3CTests : Murmur3TestsBase
 #pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable SA1114 // Parameter list should follow declaration
         "10918848739FA4FE56BA3BAD573F53AB",
+        //// ReSharper disable once StyleCop.SA1118
 #pragma warning restore SA1114 // Parameter list should follow declaration
 #pragma warning restore IDE0079 // Remove unnecessary suppression
         //// ReSharper disable StringLiteralTypo
@@ -74,6 +75,7 @@ public sealed class Murmur3CTests : Murmur3TestsBase
 #pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable SA1114 // Parameter list should follow declaration
         "CDB6793E8EA73A9C4CB861718AD4D55E",
+        //// ReSharper disable once StyleCop.SA1118
 #pragma warning restore SA1114 // Parameter list should follow declaration
 #pragma warning restore IDE0079 // Remove unnecessary suppression
         "The quick brown fox jumps over the lazy dog",
@@ -90,6 +92,7 @@ public sealed class Murmur3CTests : Murmur3TestsBase
 #pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable SA1114 // Parameter list should follow declaration
         "E8F88FA36A97662B3A378F614AA93B4F",
+        //// ReSharper disable once StyleCop.SA1118
 #pragma warning restore SA1114 // Parameter list should follow declaration
 #pragma warning restore IDE0079 // Remove unnecessary suppression
         "The quick brown fox jumps over the lazy dog",
