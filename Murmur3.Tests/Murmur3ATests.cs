@@ -118,7 +118,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     public void Test214365InputSeed0() => this.Test(
         "7E4A8634",
         //// ReSharper disable once StyleCop.SA1502
-        new[] { (byte)0x21, (byte)0x43, (byte)0x65 },
+        "!Ce"u8.ToArray(),
         "Only three bytes. Should end up as 0x654321");
 
     /// <summary>
@@ -128,7 +128,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     public void Test2143InputSeed0() => this.Test(
         "A0F7B07A",
         //// ReSharper disable once StyleCop.SA1502
-        new[] { (byte)0x21, (byte)0x43 },
+        "!C"u8.ToArray(),
         "Only two bytes. Should end up as 0x4321");
 
     /// <summary>
@@ -137,7 +137,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     [TestMethod]
     public void Test21InputSeed0() =>
         //// ReSharper disable once StyleCop.SA1502
-        this.Test("72661CF4", new[] { (byte)0x21 }, "Only one byte. Should end up as 0x21");
+        this.Test("72661CF4", "!"u8.ToArray(), "Only one byte. Should end up as 0x21");
 
     /// <summary>
     /// Tests an array with bytes 0x00000000 with an input seed of 0x00000000.
