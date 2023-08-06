@@ -7,8 +7,10 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+// Ignore Spelling: ib
 namespace Murmur3
 {
+    using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Runtime.CompilerServices;
 
@@ -144,6 +146,56 @@ namespace Murmur3
             }
         }
 
+        /// <summary>
+        /// Routes data written to the object into the hash algorithm for computing the hash.
+        /// </summary>
+        /// <param name="source">The input to compute the hash code for.</param>
+        // ReSharper disable once MethodTooLong
+        protected override void HashCore(ReadOnlySpan<byte> source)
+        {
+            this.Length += source.Length;
+
+            const int BlockSizeInBytes = 16;
+            int remainder = source.Length & (BlockSizeInBytes - 1);
+            int alignedLength = source.Length - remainder;
+            byte[] array = source.ToArray();
+
+            for (int i = 0; i < alignedLength; i += BlockSizeInBytes)
+            {
+                uint k1 = ToUInt32(array, i);
+                //// ReSharper disable ComplexConditionExpression
+                uint k2 = ToUInt32(array, i + (BlockSizeInBytes / 4));
+                uint k3 = ToUInt32(array, i + (BlockSizeInBytes / 2));
+                uint k4 = ToUInt32(array, i + (3 * BlockSizeInBytes / 4));
+                //// ReSharper restore ComplexConditionExpression
+
+                this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                this._h1 = RotateLeft(this._h1, 19);
+                this._h1 += this._h2;
+                this._h1 = (5 * this._h1) + 0x561CCD1BU;
+
+                this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                this._h2 = RotateLeft(this._h2, 17);
+                this._h2 += this._h3;
+                this._h2 = (5 * this._h2) + 0x0BCAA747U;
+
+                this._h3 ^= C4 * RotateLeft(C3 * k3, 17);
+                this._h3 = RotateLeft(this._h3, 15);
+                this._h3 += this._h4;
+                this._h3 = (5 * this._h3) + 0x96CD1C35U;
+
+                this._h4 ^= C1 * RotateLeft(C4 * k4, 18);
+                this._h4 = RotateLeft(this._h4, 13);
+                this._h4 += this._h1;
+                this._h4 = (5 * this._h4) + 0x32AC3B17U;
+            }
+
+            if (remainder > 0)
+            {
+                this.Tail(source, alignedLength, remainder);
+            }
+        }
+
         /// <inheritdoc />
         /// <summary>
         /// When overridden in a derived class, finalizes the hash computation after the last data is processed by the
@@ -196,6 +248,59 @@ namespace Murmur3
         }
 
         /// <summary>
+        /// Attempts to finalize the hash computation after the last data is processed by the hash algorithm.
+        /// </summary>
+        /// <param name="destination">The buffer to receive the hash value.</param>
+        /// <param name="bytesWritten">When this method returns, the total number of bytes written into
+        /// <paramref name="destination" />. This parameter is treated as uninitialized.</param>
+        /// <returns><see langword="true" /> if <paramref name="destination" /> is long enough to receive the hash
+        /// value; otherwise, <see langword="false" />.</returns>
+        // ReSharper disable once MethodTooLong
+        protected override bool TryHashFinal(Span<byte> destination, out int bytesWritten)
+        {
+            this._h1 ^= (uint)this.Length;
+            this._h2 ^= (uint)this.Length;
+            this._h3 ^= (uint)this.Length;
+            this._h4 ^= (uint)this.Length;
+
+            this._h1 += this._h2;
+            this._h1 += this._h3;
+            this._h1 += this._h4;
+
+            this._h2 += this._h1;
+            this._h3 += this._h1;
+            this._h4 += this._h1;
+
+            this._h1 = FMix(this._h1);
+            this._h2 = FMix(this._h2);
+            this._h3 = FMix(this._h3);
+            this._h4 = FMix(this._h4);
+
+            this._h1 += this._h2;
+            this._h1 += this._h3;
+            this._h1 += this._h4;
+
+            this._h2 += this._h1;
+            this._h3 += this._h1;
+            this._h4 += this._h1;
+
+            byte[] b1 = GetBytes(this._h1);
+            byte[] b2 = GetBytes(this._h2);
+            byte[] b3 = GetBytes(this._h3);
+            byte[] b4 = GetBytes(this._h4);
+            //// ReSharper disable once ComplexConditionExpression
+            byte[] bytes = new byte[b1.Length + b2.Length + b3.Length + b4.Length];
+
+            b1.CopyTo(bytes, 0);
+            b2.CopyTo(bytes, b1.Length);
+            b3.CopyTo(bytes, b1.Length + b2.Length);
+            b4.CopyTo(bytes, b1.Length + b2.Length + b3.Length);
+            bytes.CopyTo(destination);
+            bytesWritten = bytes.Length;
+            return true;
+        }
+
+        /// <summary>
         /// Rotates the bits left in an unsigned int.
         /// </summary>
         /// <param name="x">The value to rotate.</param>
@@ -230,6 +335,213 @@ namespace Murmur3
         //// ReSharper disable once MethodTooLong
         //// ReSharper disable once CognitiveComplexity
         private void Tail(in byte[] tail, in int position, in int remainder)
+        {
+            uint k1 = 0x00000000U;
+            uint k2 = 0x00000000U;
+            uint k3 = 0x00000000U;
+            uint k4 = 0x00000000U;
+
+            switch (remainder)
+            {
+                case 15:
+                    k4 ^= (uint)tail[position + 14] << 16;
+                    k4 ^= (uint)tail[position + 13] << 8;
+                    k4 ^= tail[position + 12];
+                    this._h4 ^= C1 * RotateLeft(C4 * k4, 18);
+                    k3 ^= (uint)tail[position + 11] << 24;
+                    k3 ^= (uint)tail[position + 10] << 16;
+                    k3 ^= (uint)tail[position + 9] << 8;
+                    k3 ^= tail[position + 8];
+                    this._h3 ^= C4 * RotateLeft(C3 * k3, 17);
+                    k2 ^= (uint)tail[position + 7] << 24;
+                    k2 ^= (uint)tail[position + 6] << 16;
+                    k2 ^= (uint)tail[position + 5] << 8;
+                    k2 ^= tail[position + 4];
+                    this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                    k1 ^= (uint)tail[position + 3] << 24;
+                    k1 ^= (uint)tail[position + 2] << 16;
+                    k1 ^= (uint)tail[position + 1] << 8;
+                    k1 ^= tail[position];
+                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    break;
+                case 14:
+                    k4 ^= (uint)tail[position + 13] << 8;
+                    k4 ^= tail[position + 12];
+                    this._h4 ^= C1 * RotateLeft(C4 * k4, 18);
+                    k3 ^= (uint)tail[position + 11] << 24;
+                    k3 ^= (uint)tail[position + 10] << 16;
+                    k3 ^= (uint)tail[position + 9] << 8;
+                    k3 ^= tail[position + 8];
+                    this._h3 ^= C4 * RotateLeft(C3 * k3, 17);
+                    k2 ^= (uint)tail[position + 7] << 24;
+                    k2 ^= (uint)tail[position + 6] << 16;
+                    k2 ^= (uint)tail[position + 5] << 8;
+                    k2 ^= tail[position + 4];
+                    this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                    k1 ^= (uint)tail[position + 3] << 24;
+                    k1 ^= (uint)tail[position + 2] << 16;
+                    k1 ^= (uint)tail[position + 1] << 8;
+                    k1 ^= tail[position];
+                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    break;
+                case 13:
+                    k4 ^= tail[position + 12];
+                    this._h4 ^= C1 * RotateLeft(C4 * k4, 18);
+                    k3 ^= (uint)tail[position + 11] << 24;
+                    k3 ^= (uint)tail[position + 10] << 16;
+                    k3 ^= (uint)tail[position + 9] << 8;
+                    k3 ^= tail[position + 8];
+                    this._h3 ^= C4 * RotateLeft(C3 * k3, 17);
+                    k2 ^= (uint)tail[position + 7] << 24;
+                    k2 ^= (uint)tail[position + 6] << 16;
+                    k2 ^= (uint)tail[position + 5] << 8;
+                    k2 ^= tail[position + 4];
+                    this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                    k1 ^= (uint)tail[position + 3] << 24;
+                    k1 ^= (uint)tail[position + 2] << 16;
+                    k1 ^= (uint)tail[position + 1] << 8;
+                    k1 ^= tail[position];
+                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    break;
+                case 12:
+                    k3 ^= (uint)tail[position + 11] << 24;
+                    k3 ^= (uint)tail[position + 10] << 16;
+                    k3 ^= (uint)tail[position + 9] << 8;
+                    k3 ^= tail[position + 8];
+                    this._h3 ^= C4 * RotateLeft(C3 * k3, 17);
+                    k2 ^= (uint)tail[position + 7] << 24;
+                    k2 ^= (uint)tail[position + 6] << 16;
+                    k2 ^= (uint)tail[position + 5] << 8;
+                    k2 ^= tail[position + 4];
+                    this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                    k1 ^= (uint)tail[position + 3] << 24;
+                    k1 ^= (uint)tail[position + 2] << 16;
+                    k1 ^= (uint)tail[position + 1] << 8;
+                    k1 ^= tail[position];
+                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    break;
+                case 11:
+                    k3 ^= (uint)tail[position + 10] << 16;
+                    k3 ^= (uint)tail[position + 9] << 8;
+                    k3 ^= tail[position + 8];
+                    this._h3 ^= C4 * RotateLeft(C3 * k3, 17);
+                    k2 ^= (uint)tail[position + 7] << 24;
+                    k2 ^= (uint)tail[position + 6] << 16;
+                    k2 ^= (uint)tail[position + 5] << 8;
+                    k2 ^= tail[position + 4];
+                    this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                    k1 ^= (uint)tail[position + 3] << 24;
+                    k1 ^= (uint)tail[position + 2] << 16;
+                    k1 ^= (uint)tail[position + 1] << 8;
+                    k1 ^= tail[position];
+                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    break;
+                case 10:
+                    k3 ^= (uint)tail[position + 9] << 8;
+                    k3 ^= tail[position + 8];
+                    this._h3 ^= C4 * RotateLeft(C3 * k3, 17);
+                    k2 ^= (uint)tail[position + 7] << 24;
+                    k2 ^= (uint)tail[position + 6] << 16;
+                    k2 ^= (uint)tail[position + 5] << 8;
+                    k2 ^= tail[position + 4];
+                    this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                    k1 ^= (uint)tail[position + 3] << 24;
+                    k1 ^= (uint)tail[position + 2] << 16;
+                    k1 ^= (uint)tail[position + 1] << 8;
+                    k1 ^= tail[position];
+                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    break;
+                case 9:
+                    k3 ^= tail[position + 8];
+                    this._h3 ^= C4 * RotateLeft(C3 * k3, 17);
+                    k2 ^= (uint)tail[position + 7] << 24;
+                    k2 ^= (uint)tail[position + 6] << 16;
+                    k2 ^= (uint)tail[position + 5] << 8;
+                    k2 ^= tail[position + 4];
+                    this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                    k1 ^= (uint)tail[position + 3] << 24;
+                    k1 ^= (uint)tail[position + 2] << 16;
+                    k1 ^= (uint)tail[position + 1] << 8;
+                    k1 ^= tail[position];
+                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    break;
+                case 8:
+                    k2 ^= (uint)tail[position + 7] << 24;
+                    k2 ^= (uint)tail[position + 6] << 16;
+                    k2 ^= (uint)tail[position + 5] << 8;
+                    k2 ^= tail[position + 4];
+                    this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                    k1 ^= (uint)tail[position + 3] << 24;
+                    k1 ^= (uint)tail[position + 2] << 16;
+                    k1 ^= (uint)tail[position + 1] << 8;
+                    k1 ^= tail[position];
+                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    break;
+                case 7:
+                    k2 ^= (uint)tail[position + 6] << 16;
+                    k2 ^= (uint)tail[position + 5] << 8;
+                    k2 ^= tail[position + 4];
+                    this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                    k1 ^= (uint)tail[position + 3] << 24;
+                    k1 ^= (uint)tail[position + 2] << 16;
+                    k1 ^= (uint)tail[position + 1] << 8;
+                    k1 ^= tail[position];
+                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    break;
+                case 6:
+                    k2 ^= (uint)tail[position + 5] << 8;
+                    k2 ^= tail[position + 4];
+                    this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                    k1 ^= (uint)tail[position + 3] << 24;
+                    k1 ^= (uint)tail[position + 2] << 16;
+                    k1 ^= (uint)tail[position + 1] << 8;
+                    k1 ^= tail[position];
+                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    break;
+                case 5:
+                    k2 ^= tail[position + 4];
+                    this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                    k1 ^= (uint)tail[position + 3] << 24;
+                    k1 ^= (uint)tail[position + 2] << 16;
+                    k1 ^= (uint)tail[position + 1] << 8;
+                    k1 ^= tail[position];
+                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    break;
+                case 4:
+                    k1 ^= (uint)tail[position + 3] << 24;
+                    k1 ^= (uint)tail[position + 2] << 16;
+                    k1 ^= (uint)tail[position + 1] << 8;
+                    k1 ^= tail[position];
+                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    break;
+                case 3:
+                    k1 ^= (uint)tail[position + 2] << 16;
+                    k1 ^= (uint)tail[position + 1] << 8;
+                    k1 ^= tail[position];
+                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    break;
+                case 2:
+                    k1 ^= (uint)tail[position + 1] << 8;
+                    k1 ^= tail[position];
+                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    break;
+                case 1:
+                    k1 ^= tail[position];
+                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Processes the remaining bytes (the "tail") of an aligned block.
+        /// </summary>
+        /// <param name="tail">The read-only span of bytes being hashed.</param>
+        /// <param name="position">The position in the read-only span of bytes where the tail starts.</param>
+        /// <param name="remainder">The number of bytes remaining to process.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        //// ReSharper disable once MethodTooLong
+        //// ReSharper disable once CognitiveComplexity
+        private void Tail(in ReadOnlySpan<byte> tail, in int position, in int remainder)
         {
             uint k1 = 0x00000000U;
             uint k2 = 0x00000000U;

@@ -7,8 +7,10 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+// Ignore Spelling: ib
 namespace Murmur3
 {
+    using System;
     using System.Diagnostics.CodeAnalysis;
     using System.Runtime.CompilerServices;
 
@@ -91,6 +93,31 @@ namespace Murmur3
             }
         }
 
+        /// <summary>
+        /// Routes data written to the object into the hash algorithm for computing the hash.
+        /// </summary>
+        /// <param name="source">The input to compute the hash code for.</param>
+        protected override void HashCore(ReadOnlySpan<byte> source)
+        {
+            this.Length += source.Length;
+
+            const int BlockSizeInBytes = 4;
+            int remainder = source.Length & (BlockSizeInBytes - 1);
+            int alignedLength = source.Length - remainder;
+            byte[] array = source.ToArray();
+
+            for (int i = 0; i < alignedLength; i += BlockSizeInBytes)
+            {
+                this._h1 ^= C2 * RotateLeft(C1 * ToUInt32(array, i), 15);
+                this._h1 = (5 * RotateLeft(this._h1, 13)) + 0xE6546B64;
+            }
+
+            if (remainder > 0)
+            {
+                this.Tail(source, alignedLength, remainder);
+            }
+        }
+
         /// <inheritdoc />
         /// <summary>
         /// When overridden in a derived class, finalizes the hash computation after the last data is processed by the
@@ -103,6 +130,25 @@ namespace Murmur3
         {
             this._h1 = FMix(this._h1 ^ (uint)this.Length);
             return GetBytes(this._h1);
+        }
+
+        /// <summary>
+        /// Attempts to finalize the hash computation after the last data is processed by the hash algorithm.
+        /// </summary>
+        /// <param name="destination">The buffer to receive the hash value.</param>
+        /// <param name="bytesWritten">When this method returns, the total number of bytes written into
+        /// <paramref name="destination" />. This parameter is treated as uninitialized.</param>
+        /// <returns><see langword="true" /> if <paramref name="destination" /> is long enough to receive the hash
+        /// value; otherwise, <see langword="false" />.</returns>
+        protected override bool TryHashFinal(Span<byte> destination, out int bytesWritten)
+        {
+            this._h1 = FMix(this._h1 ^ (uint)this.Length);
+
+            byte[] bytes = GetBytes(this._h1);
+
+            bytes.CopyTo(destination);
+            bytesWritten = bytes.Length;
+            return true;
         }
 
         /// <summary>
@@ -138,6 +184,37 @@ namespace Murmur3
         /// <param name="remainder">The number of bytes remaining to process.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void Tail(in byte[] tail, in int position, in int remainder)
+        {
+            uint k1 = 0x00000000U;
+
+            switch (remainder)
+            {
+                case 3:
+                    k1 ^= (uint)tail[position + 2] << 16;
+                    k1 ^= (uint)tail[position + 1] << 8;
+                    k1 ^= tail[position];
+                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    break;
+                case 2:
+                    k1 ^= (uint)tail[position + 1] << 8;
+                    k1 ^= tail[position];
+                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    break;
+                case 1:
+                    k1 ^= tail[position];
+                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    break;
+            }
+        }
+
+        /// <summary>
+        /// Processes the remaining bytes (the "tail") of an aligned block.
+        /// </summary>
+        /// <param name="tail">The read-only span of bytes being hashed.</param>
+        /// <param name="position">The position in the read-only span of bytes where the tail starts.</param>
+        /// <param name="remainder">The number of bytes remaining to process.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void Tail(in ReadOnlySpan<byte> tail, in int position, in int remainder)
         {
             uint k1 = 0x00000000U;
 

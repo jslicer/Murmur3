@@ -7,6 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+// Ignore Spelling: alg
 namespace Murmur3.Tests;
 
 using System.Numerics;
@@ -38,11 +39,7 @@ public abstract class Murmur3TestsBase
     /// Murmur3Base.</exception>
     protected Murmur3TestsBase(in Type algType)
     {
-        if (algType is null)
-        {
-            throw new ArgumentNullException(nameof(algType));
-        }
-
+        ArgumentNullException.ThrowIfNull(algType);
         if (!algType.IsAssignableTo(typeof(Murmur3Base)))
         {
             throw new InvalidOperationException("The algorithm type must be a descendant of Murmur3Base.");
@@ -85,34 +82,27 @@ public abstract class Murmur3TestsBase
     /// Tests using the SMHasher KeysetTest VerificationTest.
     /// ReSharper restore CommentTypo.
     /// </summary>
+    /// <returns>An asynchronous <see cref="Task" />.</returns>
     /// <param name="expected">The expected.</param>
     /// <exception cref="InvalidOperationException">Hash algorithm constructor not found.</exception>
     /// <exception cref="InvalidOperationException">Hash invalid.</exception>
     // ReSharper disable once MethodTooLong
-    protected void TestSmHasher(in string expected)
+    protected async Task TestSmHasherAsync(string expected)
     {
-        using HashAlgorithm? alg = this.GetAlgorithm();
-        if (alg is null)
-        {
-            throw new InvalidOperationException("Hash algorithm constructor not found.");
-        }
-
+        using HashAlgorithm alg =
+            this.GetAlgorithm() ?? throw new InvalidOperationException("Hash algorithm constructor not found.");
         byte[] key = new byte[256];
 
-        using CryptoStream cryptoStream = new (Stream.Null, alg, CryptoStreamMode.Write);
+        await using CryptoStream cryptoStream = new (Stream.Null, alg, CryptoStreamMode.Write);
         for (int i = 0; i < key.Length; i++)
         {
             key[i] = (byte)i;
-            using HashAlgorithm? alg2 = this.GetAlgorithm(key.Length - i);
-            if (alg2 is null)
-            {
-                throw new InvalidOperationException("Hash algorithm constructor not found.");
-            }
-
+            using HashAlgorithm alg2 = this.GetAlgorithm(key.Length - i)
+                ?? throw new InvalidOperationException("Hash algorithm constructor not found.");
             cryptoStream.Write(alg2.ComputeHash(key, 0, i));
         }
 
-        cryptoStream.FlushFinalBlock();
+        await cryptoStream.FlushFinalBlockAsync().ConfigureAwait(false);
         if (alg.Hash is null)
         {
             throw new InvalidOperationException("Hash invalid.");
@@ -131,12 +121,18 @@ public abstract class Murmur3TestsBase
     /// <param name="seed">The seed value.</param>
     /// <returns>The result of applying the specified Murmur3 hashing algorithm variant to the input byte
     /// array.</returns>
-    private BigInteger Hash(in byte[] input, in int seed = 0x00000000)
+    private BigInteger Hash(in ReadOnlySpan<byte> input, in int seed = 0x00000000)
     {
-        using HashAlgorithm? alg = this.GetAlgorithm(seed);
-        return alg is null
-            ? throw new InvalidOperationException("Hash algorithm constructor not found.")
-            : new BigInteger(alg.ComputeHash(input));
+        using HashAlgorithm alg =
+            this.GetAlgorithm(seed) ?? throw new InvalidOperationException("Hash algorithm constructor not found.");
+
+        // ReSharper disable once ComplexConditionExpression
+        Span<byte> destination = stackalloc byte[alg.HashSize / 8];
+        bool result = alg.TryComputeHash(input, destination, out int bytesWritten);
+
+        IsTrue(result);
+        AreEqual(destination.Length, bytesWritten);
+        return new BigInteger(destination);
     }
 
     /// <summary>

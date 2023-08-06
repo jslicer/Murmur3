@@ -17,7 +17,7 @@ Murmur3.Tests.Murmur3ATests.TestLoremIpsumInputSeed0() -> void
 Murmur3.Tests.Murmur3ATests.TestQuickBrownFoxInputSeed0() -> void
 Murmur3.Tests.Murmur3ATests.TestQuickBrownFoxInputSeed9747b28c() -> void
 Murmur3.Tests.Murmur3ATests.TestQuickBrownFoxInputSeedC58f1a7b() -> void
-Murmur3.Tests.Murmur3ATests.TestSmHasher() -> void
+Murmur3.Tests.Murmur3ATests.TestSmHasherAsync() -> System.Threading.Tasks.Task!
 Murmur3.Tests.Murmur3CTests
 Murmur3.Tests.Murmur3CTests.Murmur3CTests() -> void
 Murmur3.Tests.Murmur3CTests.TestEmptyInputSeed0() -> void
@@ -25,7 +25,7 @@ Murmur3.Tests.Murmur3CTests.TestLoremIpsumInputSeed0() -> void
 Murmur3.Tests.Murmur3CTests.TestQuickBrownFoxInputSeed0() -> void
 Murmur3.Tests.Murmur3CTests.TestQuickBrownFoxInputSeed9747b28c() -> void
 Murmur3.Tests.Murmur3CTests.TestQuickBrownFoxInputSeedC58f1a7b() -> void
-Murmur3.Tests.Murmur3CTests.TestSmHasher() -> void
+Murmur3.Tests.Murmur3CTests.TestSmHasherAsync() -> System.Threading.Tasks.Task!
 Murmur3.Tests.Murmur3FTests
 Murmur3.Tests.Murmur3FTests.Murmur3FTests() -> void
 Murmur3.Tests.Murmur3FTests.TestEmptyInputSeed0() -> void
@@ -33,9 +33,9 @@ Murmur3.Tests.Murmur3FTests.TestLoremIpsumInputSeed0() -> void
 Murmur3.Tests.Murmur3FTests.TestQuickBrownFoxInputSeed0() -> void
 Murmur3.Tests.Murmur3FTests.TestQuickBrownFoxInputSeed9747b28c() -> void
 Murmur3.Tests.Murmur3FTests.TestQuickBrownFoxInputSeedC58f1a7b() -> void
-Murmur3.Tests.Murmur3FTests.TestSmHasher() -> void
+Murmur3.Tests.Murmur3FTests.TestSmHasherAsync() -> System.Threading.Tasks.Task!
 Murmur3.Tests.Murmur3TestsBase
 Murmur3.Tests.Murmur3TestsBase.Murmur3TestsBase(in System.Type! algType) -> void
 Murmur3.Tests.Murmur3TestsBase.Test(in string! expected, in byte[]! input, in string! message, in int seed = 0) -> void
 Murmur3.Tests.Murmur3TestsBase.Test(in string! expected, in string! input, in string! message, in int seed = 0) -> void
-Murmur3.Tests.Murmur3TestsBase.TestSmHasher(in string! expected) -> void
+Murmur3.Tests.Murmur3TestsBase.TestSmHasherAsync(string! expected) -> System.Threading.Tasks.Task!

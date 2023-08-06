@@ -7,6 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+// Ignore Spelling: Lorem Ipsum
 namespace Murmur3.Tests;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -102,6 +103,8 @@ public sealed class Murmur3CTests : Murmur3TestsBase
     /// <summary>
     /// Tests using the SMHasher KeysetTest VerificationTest.
     /// </summary>
+    /// <returns>An asynchronous <see cref="Task" />.</returns>
     [TestMethod]
-    public void TestSmHasher() => this.TestSmHasher("79C0CA32C3944F38D61A233AB3ECE62A");
+    public async Task TestSmHasherAsync() =>
+        await this.TestSmHasherAsync("79C0CA32C3944F38D61A233AB3ECE62A").ConfigureAwait(false);
 }
