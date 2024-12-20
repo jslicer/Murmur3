@@ -69,13 +69,13 @@ namespace Murmur3
         /// <param name="seed">The seed value.</param>
         public Murmur3C(in int seed = 0x00000000)
             : base(128, seed) =>
-            this.Init();
+            Init();
 
         /// <inheritdoc />
         /// <summary>
         /// Initializes an implementation of the <see cref="Murmur3C" /> class.
         /// </summary>
-        public override void Initialize() => this.Init();
+        public override void Initialize() => Init();
 
         /// <inheritdoc />
         /// <summary>
@@ -83,10 +83,10 @@ namespace Murmur3
         /// </summary>
         protected override void Init()
         {
-            this._h1 = this.Seed;
-            this._h2 = this.Seed;
-            this._h3 = this.Seed;
-            this._h4 = this.Seed;
+            _h1 = Seed;
+            _h2 = Seed;
+            _h3 = Seed;
+            _h4 = Seed;
             base.Init();
         }
 
@@ -104,7 +104,7 @@ namespace Murmur3
         //// ReSharper disable once MethodTooLong
         protected override void HashCore(byte[] array, int ibStart, int cbSize)
         {
-            this.Length += cbSize;
+            Length += cbSize;
 
             const int BlockSizeInBytes = 16;
             int remainder = cbSize & (BlockSizeInBytes - 1);
@@ -119,30 +119,30 @@ namespace Murmur3
                 uint k4 = ToUInt32(array, i + (3 * BlockSizeInBytes / 4));
                 //// ReSharper restore ComplexConditionExpression
 
-                this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
-                this._h1 = RotateLeft(this._h1, 19);
-                this._h1 += this._h2;
-                this._h1 = (5 * this._h1) + 0x561CCD1BU;
+                _h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                _h1 = RotateLeft(_h1, 19);
+                _h1 += _h2;
+                _h1 = (5 * _h1) + 0x561CCD1BU;
 
-                this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
-                this._h2 = RotateLeft(this._h2, 17);
-                this._h2 += this._h3;
-                this._h2 = (5 * this._h2) + 0x0BCAA747U;
+                _h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                _h2 = RotateLeft(_h2, 17);
+                _h2 += _h3;
+                _h2 = (5 * _h2) + 0x0BCAA747U;
 
-                this._h3 ^= C4 * RotateLeft(C3 * k3, 17);
-                this._h3 = RotateLeft(this._h3, 15);
-                this._h3 += this._h4;
-                this._h3 = (5 * this._h3) + 0x96CD1C35U;
+                _h3 ^= C4 * RotateLeft(C3 * k3, 17);
+                _h3 = RotateLeft(_h3, 15);
+                _h3 += _h4;
+                _h3 = (5 * _h3) + 0x96CD1C35U;
 
-                this._h4 ^= C1 * RotateLeft(C4 * k4, 18);
-                this._h4 = RotateLeft(this._h4, 13);
-                this._h4 += this._h1;
-                this._h4 = (5 * this._h4) + 0x32AC3B17U;
+                _h4 ^= C1 * RotateLeft(C4 * k4, 18);
+                _h4 = RotateLeft(_h4, 13);
+                _h4 += _h1;
+                _h4 = (5 * _h4) + 0x32AC3B17U;
             }
 
             if (remainder > 0)
             {
-                this.Tail(array, alignedLength, remainder);
+                Tail(array, alignedLength, remainder);
             }
         }
 
@@ -153,7 +153,7 @@ namespace Murmur3
         // ReSharper disable once MethodTooLong
         protected override void HashCore(ReadOnlySpan<byte> source)
         {
-            this.Length += source.Length;
+            Length += source.Length;
 
             const int BlockSizeInBytes = 16;
             int remainder = source.Length & (BlockSizeInBytes - 1);
@@ -169,30 +169,30 @@ namespace Murmur3
                 uint k4 = ToUInt32(array, i + (3 * BlockSizeInBytes / 4));
                 //// ReSharper restore ComplexConditionExpression
 
-                this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
-                this._h1 = RotateLeft(this._h1, 19);
-                this._h1 += this._h2;
-                this._h1 = (5 * this._h1) + 0x561CCD1BU;
+                _h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                _h1 = RotateLeft(_h1, 19);
+                _h1 += _h2;
+                _h1 = (5 * _h1) + 0x561CCD1BU;
 
-                this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
-                this._h2 = RotateLeft(this._h2, 17);
-                this._h2 += this._h3;
-                this._h2 = (5 * this._h2) + 0x0BCAA747U;
+                _h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                _h2 = RotateLeft(_h2, 17);
+                _h2 += _h3;
+                _h2 = (5 * _h2) + 0x0BCAA747U;
 
-                this._h3 ^= C4 * RotateLeft(C3 * k3, 17);
-                this._h3 = RotateLeft(this._h3, 15);
-                this._h3 += this._h4;
-                this._h3 = (5 * this._h3) + 0x96CD1C35U;
+                _h3 ^= C4 * RotateLeft(C3 * k3, 17);
+                _h3 = RotateLeft(_h3, 15);
+                _h3 += _h4;
+                _h3 = (5 * _h3) + 0x96CD1C35U;
 
-                this._h4 ^= C1 * RotateLeft(C4 * k4, 18);
-                this._h4 = RotateLeft(this._h4, 13);
-                this._h4 += this._h1;
-                this._h4 = (5 * this._h4) + 0x32AC3B17U;
+                _h4 ^= C1 * RotateLeft(C4 * k4, 18);
+                _h4 = RotateLeft(_h4, 13);
+                _h4 += _h1;
+                _h4 = (5 * _h4) + 0x32AC3B17U;
             }
 
             if (remainder > 0)
             {
-                this.Tail(source, alignedLength, remainder);
+                Tail(source, alignedLength, remainder);
             }
         }
 
@@ -207,36 +207,36 @@ namespace Murmur3
         // ReSharper disable once MethodTooLong
         protected override byte[] HashFinal()
         {
-            this._h1 ^= (uint)this.Length;
-            this._h2 ^= (uint)this.Length;
-            this._h3 ^= (uint)this.Length;
-            this._h4 ^= (uint)this.Length;
+            _h1 ^= (uint)Length;
+            _h2 ^= (uint)Length;
+            _h3 ^= (uint)Length;
+            _h4 ^= (uint)Length;
 
-            this._h1 += this._h2;
-            this._h1 += this._h3;
-            this._h1 += this._h4;
+            _h1 += _h2;
+            _h1 += _h3;
+            _h1 += _h4;
 
-            this._h2 += this._h1;
-            this._h3 += this._h1;
-            this._h4 += this._h1;
+            _h2 += _h1;
+            _h3 += _h1;
+            _h4 += _h1;
 
-            this._h1 = FMix(this._h1);
-            this._h2 = FMix(this._h2);
-            this._h3 = FMix(this._h3);
-            this._h4 = FMix(this._h4);
+            _h1 = FMix(_h1);
+            _h2 = FMix(_h2);
+            _h3 = FMix(_h3);
+            _h4 = FMix(_h4);
 
-            this._h1 += this._h2;
-            this._h1 += this._h3;
-            this._h1 += this._h4;
+            _h1 += _h2;
+            _h1 += _h3;
+            _h1 += _h4;
 
-            this._h2 += this._h1;
-            this._h3 += this._h1;
-            this._h4 += this._h1;
+            _h2 += _h1;
+            _h3 += _h1;
+            _h4 += _h1;
 
-            byte[] b1 = GetBytes(this._h1);
-            byte[] b2 = GetBytes(this._h2);
-            byte[] b3 = GetBytes(this._h3);
-            byte[] b4 = GetBytes(this._h4);
+            byte[] b1 = GetBytes(_h1);
+            byte[] b2 = GetBytes(_h2);
+            byte[] b3 = GetBytes(_h3);
+            byte[] b4 = GetBytes(_h4);
             //// ReSharper disable once ComplexConditionExpression
             byte[] hash = new byte[b1.Length + b2.Length + b3.Length + b4.Length];
 
@@ -258,36 +258,36 @@ namespace Murmur3
         // ReSharper disable once MethodTooLong
         protected override bool TryHashFinal(Span<byte> destination, out int bytesWritten)
         {
-            this._h1 ^= (uint)this.Length;
-            this._h2 ^= (uint)this.Length;
-            this._h3 ^= (uint)this.Length;
-            this._h4 ^= (uint)this.Length;
+            _h1 ^= (uint)Length;
+            _h2 ^= (uint)Length;
+            _h3 ^= (uint)Length;
+            _h4 ^= (uint)Length;
 
-            this._h1 += this._h2;
-            this._h1 += this._h3;
-            this._h1 += this._h4;
+            _h1 += _h2;
+            _h1 += _h3;
+            _h1 += _h4;
 
-            this._h2 += this._h1;
-            this._h3 += this._h1;
-            this._h4 += this._h1;
+            _h2 += _h1;
+            _h3 += _h1;
+            _h4 += _h1;
 
-            this._h1 = FMix(this._h1);
-            this._h2 = FMix(this._h2);
-            this._h3 = FMix(this._h3);
-            this._h4 = FMix(this._h4);
+            _h1 = FMix(_h1);
+            _h2 = FMix(_h2);
+            _h3 = FMix(_h3);
+            _h4 = FMix(_h4);
 
-            this._h1 += this._h2;
-            this._h1 += this._h3;
-            this._h1 += this._h4;
+            _h1 += _h2;
+            _h1 += _h3;
+            _h1 += _h4;
 
-            this._h2 += this._h1;
-            this._h3 += this._h1;
-            this._h4 += this._h1;
+            _h2 += _h1;
+            _h3 += _h1;
+            _h4 += _h1;
 
-            byte[] b1 = GetBytes(this._h1);
-            byte[] b2 = GetBytes(this._h2);
-            byte[] b3 = GetBytes(this._h3);
-            byte[] b4 = GetBytes(this._h4);
+            byte[] b1 = GetBytes(_h1);
+            byte[] b2 = GetBytes(_h2);
+            byte[] b3 = GetBytes(_h3);
+            byte[] b4 = GetBytes(_h4);
             //// ReSharper disable once ComplexConditionExpression
             byte[] bytes = new byte[b1.Length + b2.Length + b3.Length + b4.Length];
 
@@ -347,187 +347,187 @@ namespace Murmur3
                     k4 ^= (uint)tail[position + 14] << 16;
                     k4 ^= (uint)tail[position + 13] << 8;
                     k4 ^= tail[position + 12];
-                    this._h4 ^= C1 * RotateLeft(C4 * k4, 18);
+                    _h4 ^= C1 * RotateLeft(C4 * k4, 18);
                     k3 ^= (uint)tail[position + 11] << 24;
                     k3 ^= (uint)tail[position + 10] << 16;
                     k3 ^= (uint)tail[position + 9] << 8;
                     k3 ^= tail[position + 8];
-                    this._h3 ^= C4 * RotateLeft(C3 * k3, 17);
+                    _h3 ^= C4 * RotateLeft(C3 * k3, 17);
                     k2 ^= (uint)tail[position + 7] << 24;
                     k2 ^= (uint)tail[position + 6] << 16;
                     k2 ^= (uint)tail[position + 5] << 8;
                     k2 ^= tail[position + 4];
-                    this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                    _h2 ^= C3 * RotateLeft(C2 * k2, 16);
                     k1 ^= (uint)tail[position + 3] << 24;
                     k1 ^= (uint)tail[position + 2] << 16;
                     k1 ^= (uint)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
                 case 14:
                     k4 ^= (uint)tail[position + 13] << 8;
                     k4 ^= tail[position + 12];
-                    this._h4 ^= C1 * RotateLeft(C4 * k4, 18);
+                    _h4 ^= C1 * RotateLeft(C4 * k4, 18);
                     k3 ^= (uint)tail[position + 11] << 24;
                     k3 ^= (uint)tail[position + 10] << 16;
                     k3 ^= (uint)tail[position + 9] << 8;
                     k3 ^= tail[position + 8];
-                    this._h3 ^= C4 * RotateLeft(C3 * k3, 17);
+                    _h3 ^= C4 * RotateLeft(C3 * k3, 17);
                     k2 ^= (uint)tail[position + 7] << 24;
                     k2 ^= (uint)tail[position + 6] << 16;
                     k2 ^= (uint)tail[position + 5] << 8;
                     k2 ^= tail[position + 4];
-                    this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                    _h2 ^= C3 * RotateLeft(C2 * k2, 16);
                     k1 ^= (uint)tail[position + 3] << 24;
                     k1 ^= (uint)tail[position + 2] << 16;
                     k1 ^= (uint)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
                 case 13:
                     k4 ^= tail[position + 12];
-                    this._h4 ^= C1 * RotateLeft(C4 * k4, 18);
+                    _h4 ^= C1 * RotateLeft(C4 * k4, 18);
                     k3 ^= (uint)tail[position + 11] << 24;
                     k3 ^= (uint)tail[position + 10] << 16;
                     k3 ^= (uint)tail[position + 9] << 8;
                     k3 ^= tail[position + 8];
-                    this._h3 ^= C4 * RotateLeft(C3 * k3, 17);
+                    _h3 ^= C4 * RotateLeft(C3 * k3, 17);
                     k2 ^= (uint)tail[position + 7] << 24;
                     k2 ^= (uint)tail[position + 6] << 16;
                     k2 ^= (uint)tail[position + 5] << 8;
                     k2 ^= tail[position + 4];
-                    this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                    _h2 ^= C3 * RotateLeft(C2 * k2, 16);
                     k1 ^= (uint)tail[position + 3] << 24;
                     k1 ^= (uint)tail[position + 2] << 16;
                     k1 ^= (uint)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
                 case 12:
                     k3 ^= (uint)tail[position + 11] << 24;
                     k3 ^= (uint)tail[position + 10] << 16;
                     k3 ^= (uint)tail[position + 9] << 8;
                     k3 ^= tail[position + 8];
-                    this._h3 ^= C4 * RotateLeft(C3 * k3, 17);
+                    _h3 ^= C4 * RotateLeft(C3 * k3, 17);
                     k2 ^= (uint)tail[position + 7] << 24;
                     k2 ^= (uint)tail[position + 6] << 16;
                     k2 ^= (uint)tail[position + 5] << 8;
                     k2 ^= tail[position + 4];
-                    this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                    _h2 ^= C3 * RotateLeft(C2 * k2, 16);
                     k1 ^= (uint)tail[position + 3] << 24;
                     k1 ^= (uint)tail[position + 2] << 16;
                     k1 ^= (uint)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
                 case 11:
                     k3 ^= (uint)tail[position + 10] << 16;
                     k3 ^= (uint)tail[position + 9] << 8;
                     k3 ^= tail[position + 8];
-                    this._h3 ^= C4 * RotateLeft(C3 * k3, 17);
+                    _h3 ^= C4 * RotateLeft(C3 * k3, 17);
                     k2 ^= (uint)tail[position + 7] << 24;
                     k2 ^= (uint)tail[position + 6] << 16;
                     k2 ^= (uint)tail[position + 5] << 8;
                     k2 ^= tail[position + 4];
-                    this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                    _h2 ^= C3 * RotateLeft(C2 * k2, 16);
                     k1 ^= (uint)tail[position + 3] << 24;
                     k1 ^= (uint)tail[position + 2] << 16;
                     k1 ^= (uint)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
                 case 10:
                     k3 ^= (uint)tail[position + 9] << 8;
                     k3 ^= tail[position + 8];
-                    this._h3 ^= C4 * RotateLeft(C3 * k3, 17);
+                    _h3 ^= C4 * RotateLeft(C3 * k3, 17);
                     k2 ^= (uint)tail[position + 7] << 24;
                     k2 ^= (uint)tail[position + 6] << 16;
                     k2 ^= (uint)tail[position + 5] << 8;
                     k2 ^= tail[position + 4];
-                    this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                    _h2 ^= C3 * RotateLeft(C2 * k2, 16);
                     k1 ^= (uint)tail[position + 3] << 24;
                     k1 ^= (uint)tail[position + 2] << 16;
                     k1 ^= (uint)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
                 case 9:
                     k3 ^= tail[position + 8];
-                    this._h3 ^= C4 * RotateLeft(C3 * k3, 17);
+                    _h3 ^= C4 * RotateLeft(C3 * k3, 17);
                     k2 ^= (uint)tail[position + 7] << 24;
                     k2 ^= (uint)tail[position + 6] << 16;
                     k2 ^= (uint)tail[position + 5] << 8;
                     k2 ^= tail[position + 4];
-                    this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                    _h2 ^= C3 * RotateLeft(C2 * k2, 16);
                     k1 ^= (uint)tail[position + 3] << 24;
                     k1 ^= (uint)tail[position + 2] << 16;
                     k1 ^= (uint)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
                 case 8:
                     k2 ^= (uint)tail[position + 7] << 24;
                     k2 ^= (uint)tail[position + 6] << 16;
                     k2 ^= (uint)tail[position + 5] << 8;
                     k2 ^= tail[position + 4];
-                    this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                    _h2 ^= C3 * RotateLeft(C2 * k2, 16);
                     k1 ^= (uint)tail[position + 3] << 24;
                     k1 ^= (uint)tail[position + 2] << 16;
                     k1 ^= (uint)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
                 case 7:
                     k2 ^= (uint)tail[position + 6] << 16;
                     k2 ^= (uint)tail[position + 5] << 8;
                     k2 ^= tail[position + 4];
-                    this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                    _h2 ^= C3 * RotateLeft(C2 * k2, 16);
                     k1 ^= (uint)tail[position + 3] << 24;
                     k1 ^= (uint)tail[position + 2] << 16;
                     k1 ^= (uint)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
                 case 6:
                     k2 ^= (uint)tail[position + 5] << 8;
                     k2 ^= tail[position + 4];
-                    this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                    _h2 ^= C3 * RotateLeft(C2 * k2, 16);
                     k1 ^= (uint)tail[position + 3] << 24;
                     k1 ^= (uint)tail[position + 2] << 16;
                     k1 ^= (uint)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
                 case 5:
                     k2 ^= tail[position + 4];
-                    this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                    _h2 ^= C3 * RotateLeft(C2 * k2, 16);
                     k1 ^= (uint)tail[position + 3] << 24;
                     k1 ^= (uint)tail[position + 2] << 16;
                     k1 ^= (uint)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
                 case 4:
                     k1 ^= (uint)tail[position + 3] << 24;
                     k1 ^= (uint)tail[position + 2] << 16;
                     k1 ^= (uint)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
                 case 3:
                     k1 ^= (uint)tail[position + 2] << 16;
                     k1 ^= (uint)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
                 case 2:
                     k1 ^= (uint)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
                 case 1:
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
             }
         }
@@ -554,187 +554,187 @@ namespace Murmur3
                     k4 ^= (uint)tail[position + 14] << 16;
                     k4 ^= (uint)tail[position + 13] << 8;
                     k4 ^= tail[position + 12];
-                    this._h4 ^= C1 * RotateLeft(C4 * k4, 18);
+                    _h4 ^= C1 * RotateLeft(C4 * k4, 18);
                     k3 ^= (uint)tail[position + 11] << 24;
                     k3 ^= (uint)tail[position + 10] << 16;
                     k3 ^= (uint)tail[position + 9] << 8;
                     k3 ^= tail[position + 8];
-                    this._h3 ^= C4 * RotateLeft(C3 * k3, 17);
+                    _h3 ^= C4 * RotateLeft(C3 * k3, 17);
                     k2 ^= (uint)tail[position + 7] << 24;
                     k2 ^= (uint)tail[position + 6] << 16;
                     k2 ^= (uint)tail[position + 5] << 8;
                     k2 ^= tail[position + 4];
-                    this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                    _h2 ^= C3 * RotateLeft(C2 * k2, 16);
                     k1 ^= (uint)tail[position + 3] << 24;
                     k1 ^= (uint)tail[position + 2] << 16;
                     k1 ^= (uint)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
                 case 14:
                     k4 ^= (uint)tail[position + 13] << 8;
                     k4 ^= tail[position + 12];
-                    this._h4 ^= C1 * RotateLeft(C4 * k4, 18);
+                    _h4 ^= C1 * RotateLeft(C4 * k4, 18);
                     k3 ^= (uint)tail[position + 11] << 24;
                     k3 ^= (uint)tail[position + 10] << 16;
                     k3 ^= (uint)tail[position + 9] << 8;
                     k3 ^= tail[position + 8];
-                    this._h3 ^= C4 * RotateLeft(C3 * k3, 17);
+                    _h3 ^= C4 * RotateLeft(C3 * k3, 17);
                     k2 ^= (uint)tail[position + 7] << 24;
                     k2 ^= (uint)tail[position + 6] << 16;
                     k2 ^= (uint)tail[position + 5] << 8;
                     k2 ^= tail[position + 4];
-                    this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                    _h2 ^= C3 * RotateLeft(C2 * k2, 16);
                     k1 ^= (uint)tail[position + 3] << 24;
                     k1 ^= (uint)tail[position + 2] << 16;
                     k1 ^= (uint)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
                 case 13:
                     k4 ^= tail[position + 12];
-                    this._h4 ^= C1 * RotateLeft(C4 * k4, 18);
+                    _h4 ^= C1 * RotateLeft(C4 * k4, 18);
                     k3 ^= (uint)tail[position + 11] << 24;
                     k3 ^= (uint)tail[position + 10] << 16;
                     k3 ^= (uint)tail[position + 9] << 8;
                     k3 ^= tail[position + 8];
-                    this._h3 ^= C4 * RotateLeft(C3 * k3, 17);
+                    _h3 ^= C4 * RotateLeft(C3 * k3, 17);
                     k2 ^= (uint)tail[position + 7] << 24;
                     k2 ^= (uint)tail[position + 6] << 16;
                     k2 ^= (uint)tail[position + 5] << 8;
                     k2 ^= tail[position + 4];
-                    this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                    _h2 ^= C3 * RotateLeft(C2 * k2, 16);
                     k1 ^= (uint)tail[position + 3] << 24;
                     k1 ^= (uint)tail[position + 2] << 16;
                     k1 ^= (uint)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
                 case 12:
                     k3 ^= (uint)tail[position + 11] << 24;
                     k3 ^= (uint)tail[position + 10] << 16;
                     k3 ^= (uint)tail[position + 9] << 8;
                     k3 ^= tail[position + 8];
-                    this._h3 ^= C4 * RotateLeft(C3 * k3, 17);
+                    _h3 ^= C4 * RotateLeft(C3 * k3, 17);
                     k2 ^= (uint)tail[position + 7] << 24;
                     k2 ^= (uint)tail[position + 6] << 16;
                     k2 ^= (uint)tail[position + 5] << 8;
                     k2 ^= tail[position + 4];
-                    this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                    _h2 ^= C3 * RotateLeft(C2 * k2, 16);
                     k1 ^= (uint)tail[position + 3] << 24;
                     k1 ^= (uint)tail[position + 2] << 16;
                     k1 ^= (uint)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
                 case 11:
                     k3 ^= (uint)tail[position + 10] << 16;
                     k3 ^= (uint)tail[position + 9] << 8;
                     k3 ^= tail[position + 8];
-                    this._h3 ^= C4 * RotateLeft(C3 * k3, 17);
+                    _h3 ^= C4 * RotateLeft(C3 * k3, 17);
                     k2 ^= (uint)tail[position + 7] << 24;
                     k2 ^= (uint)tail[position + 6] << 16;
                     k2 ^= (uint)tail[position + 5] << 8;
                     k2 ^= tail[position + 4];
-                    this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                    _h2 ^= C3 * RotateLeft(C2 * k2, 16);
                     k1 ^= (uint)tail[position + 3] << 24;
                     k1 ^= (uint)tail[position + 2] << 16;
                     k1 ^= (uint)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
                 case 10:
                     k3 ^= (uint)tail[position + 9] << 8;
                     k3 ^= tail[position + 8];
-                    this._h3 ^= C4 * RotateLeft(C3 * k3, 17);
+                    _h3 ^= C4 * RotateLeft(C3 * k3, 17);
                     k2 ^= (uint)tail[position + 7] << 24;
                     k2 ^= (uint)tail[position + 6] << 16;
                     k2 ^= (uint)tail[position + 5] << 8;
                     k2 ^= tail[position + 4];
-                    this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                    _h2 ^= C3 * RotateLeft(C2 * k2, 16);
                     k1 ^= (uint)tail[position + 3] << 24;
                     k1 ^= (uint)tail[position + 2] << 16;
                     k1 ^= (uint)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
                 case 9:
                     k3 ^= tail[position + 8];
-                    this._h3 ^= C4 * RotateLeft(C3 * k3, 17);
+                    _h3 ^= C4 * RotateLeft(C3 * k3, 17);
                     k2 ^= (uint)tail[position + 7] << 24;
                     k2 ^= (uint)tail[position + 6] << 16;
                     k2 ^= (uint)tail[position + 5] << 8;
                     k2 ^= tail[position + 4];
-                    this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                    _h2 ^= C3 * RotateLeft(C2 * k2, 16);
                     k1 ^= (uint)tail[position + 3] << 24;
                     k1 ^= (uint)tail[position + 2] << 16;
                     k1 ^= (uint)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
                 case 8:
                     k2 ^= (uint)tail[position + 7] << 24;
                     k2 ^= (uint)tail[position + 6] << 16;
                     k2 ^= (uint)tail[position + 5] << 8;
                     k2 ^= tail[position + 4];
-                    this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                    _h2 ^= C3 * RotateLeft(C2 * k2, 16);
                     k1 ^= (uint)tail[position + 3] << 24;
                     k1 ^= (uint)tail[position + 2] << 16;
                     k1 ^= (uint)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
                 case 7:
                     k2 ^= (uint)tail[position + 6] << 16;
                     k2 ^= (uint)tail[position + 5] << 8;
                     k2 ^= tail[position + 4];
-                    this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                    _h2 ^= C3 * RotateLeft(C2 * k2, 16);
                     k1 ^= (uint)tail[position + 3] << 24;
                     k1 ^= (uint)tail[position + 2] << 16;
                     k1 ^= (uint)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
                 case 6:
                     k2 ^= (uint)tail[position + 5] << 8;
                     k2 ^= tail[position + 4];
-                    this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                    _h2 ^= C3 * RotateLeft(C2 * k2, 16);
                     k1 ^= (uint)tail[position + 3] << 24;
                     k1 ^= (uint)tail[position + 2] << 16;
                     k1 ^= (uint)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
                 case 5:
                     k2 ^= tail[position + 4];
-                    this._h2 ^= C3 * RotateLeft(C2 * k2, 16);
+                    _h2 ^= C3 * RotateLeft(C2 * k2, 16);
                     k1 ^= (uint)tail[position + 3] << 24;
                     k1 ^= (uint)tail[position + 2] << 16;
                     k1 ^= (uint)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
                 case 4:
                     k1 ^= (uint)tail[position + 3] << 24;
                     k1 ^= (uint)tail[position + 2] << 16;
                     k1 ^= (uint)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
                 case 3:
                     k1 ^= (uint)tail[position + 2] << 16;
                     k1 ^= (uint)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
                 case 2:
                     k1 ^= (uint)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
                 case 1:
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
             }
         }

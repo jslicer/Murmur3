@@ -23,6 +23,21 @@ Murmur3.Tests.Murmur3CTests.Murmur3CTests() -> void
 Murmur3.Tests.Murmur3CTests.TestEmptyInputSeed0() -> void
 Murmur3.Tests.Murmur3CTests.TestLoremIpsumInputSeed0() -> void
 Murmur3.Tests.Murmur3CTests.TestQuickBrownFoxInputSeed0() -> void
+Murmur3.Tests.Murmur3CTests.TestQuickBrownFoxPeriodInputSeed0() -> void
+Murmur3.Tests.Murmur3CTests.TestQuickBrownFoxTwoPeriodsInputSeed0() -> void
+Murmur3.Tests.Murmur3CTests.TestQuickBrownFoxThreePeriodsInputSeed0() -> void
+Murmur3.Tests.Murmur3CTests.TestQuickBrownFoxFourPeriodsInputSeed0() -> void
+Murmur3.Tests.Murmur3CTests.TestQuickBrownFoxFivePeriodsInputSeed0() -> void
+Murmur3.Tests.Murmur3CTests.TestQuickBrownFoxSixPeriodsInputSeed0() -> void
+Murmur3.Tests.Murmur3CTests.TestQuickBrownFoxSevenPeriodsInputSeed0() -> void
+Murmur3.Tests.Murmur3CTests.TestQuickBrownFoxEightPeriodsInputSeed0() -> void
+Murmur3.Tests.Murmur3CTests.TestQuickBrownFoxNinePeriodsInputSeed0() -> void
+Murmur3.Tests.Murmur3CTests.TestQuickBrownFoxTenPeriodsInputSeed0() -> void
+Murmur3.Tests.Murmur3CTests.TestQuickBrownFoxElevenPeriodsInputSeed0() -> void
+Murmur3.Tests.Murmur3CTests.TestQuickBrownFoxTwelvePeriodsInputSeed0() -> void
+Murmur3.Tests.Murmur3CTests.TestQuickBrownFoxThirteenPeriodsInputSeed0() -> void
+Murmur3.Tests.Murmur3CTests.TestQuickBrownFoxFourteenPeriodsInputSeed0() -> void
+Murmur3.Tests.Murmur3CTests.TestQuickBrownFoxFifteenPeriodsInputSeed0() -> void
 Murmur3.Tests.Murmur3CTests.TestQuickBrownFoxInputSeed9747b28c() -> void
 Murmur3.Tests.Murmur3CTests.TestQuickBrownFoxInputSeedC58f1a7b() -> void
 Murmur3.Tests.Murmur3CTests.TestSmHasherAsync() -> System.Threading.Tasks.Task!
@@ -31,6 +46,21 @@ Murmur3.Tests.Murmur3FTests.Murmur3FTests() -> void
 Murmur3.Tests.Murmur3FTests.TestEmptyInputSeed0() -> void
 Murmur3.Tests.Murmur3FTests.TestLoremIpsumInputSeed0() -> void
 Murmur3.Tests.Murmur3FTests.TestQuickBrownFoxInputSeed0() -> void
+Murmur3.Tests.Murmur3FTests.TestQuickBrownFoxPeriodInputSeed0() -> void
+Murmur3.Tests.Murmur3FTests.TestQuickBrownFoxTwoPeriodsInputSeed0() -> void
+Murmur3.Tests.Murmur3FTests.TestQuickBrownFoxThreePeriodsInputSeed0() -> void
+Murmur3.Tests.Murmur3FTests.TestQuickBrownFoxFourPeriodsInputSeed0() -> void
+Murmur3.Tests.Murmur3FTests.TestQuickBrownFoxFivePeriodsInputSeed0() -> void
+Murmur3.Tests.Murmur3FTests.TestQuickBrownFoxSixPeriodsInputSeed0() -> void
+Murmur3.Tests.Murmur3FTests.TestQuickBrownFoxSevenPeriodsInputSeed0() -> void
+Murmur3.Tests.Murmur3FTests.TestQuickBrownFoxEightPeriodsInputSeed0() -> void
+Murmur3.Tests.Murmur3FTests.TestQuickBrownFoxNinePeriodsInputSeed0() -> void
+Murmur3.Tests.Murmur3FTests.TestQuickBrownFoxTenPeriodsInputSeed0() -> void
+Murmur3.Tests.Murmur3FTests.TestQuickBrownFoxElevenPeriodsInputSeed0() -> void
+Murmur3.Tests.Murmur3FTests.TestQuickBrownFoxTwelvePeriodsInputSeed0() -> void
+Murmur3.Tests.Murmur3FTests.TestQuickBrownFoxThirteenPeriodsInputSeed0() -> void
+Murmur3.Tests.Murmur3FTests.TestQuickBrownFoxFourteenPeriodsInputSeed0() -> void
+Murmur3.Tests.Murmur3FTests.TestQuickBrownFoxFifteenPeriodsInputSeed0() -> void
 Murmur3.Tests.Murmur3FTests.TestQuickBrownFoxInputSeed9747b28c() -> void
 Murmur3.Tests.Murmur3FTests.TestQuickBrownFoxInputSeedC58f1a7b() -> void
 Murmur3.Tests.Murmur3FTests.TestSmHasherAsync() -> System.Threading.Tasks.Task!
@@ -38,4 +68,4 @@ Murmur3.Tests.Murmur3TestsBase
 Murmur3.Tests.Murmur3TestsBase.Murmur3TestsBase(in System.Type! algType) -> void
 Murmur3.Tests.Murmur3TestsBase.Test(in string! expected, in byte[]! input, in string! message, in int seed = 0) -> void
 Murmur3.Tests.Murmur3TestsBase.Test(in string! expected, in string! input, in string! message, in int seed = 0) -> void
-Murmur3.Tests.Murmur3TestsBase.TestSmHasherAsync(string! expected) -> System.Threading.Tasks.Task!
+Murmur3.Tests.Murmur3TestsBase.TestSmHasherAsync(string! expected, System.Threading.CancellationToken token = default(System.Threading.CancellationToken)) -> System.Threading.Tasks.Task!

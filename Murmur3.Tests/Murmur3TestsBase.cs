@@ -45,7 +45,7 @@ public abstract class Murmur3TestsBase
             throw new InvalidOperationException("The algorithm type must be a descendant of Murmur3Base.");
         }
 
-        this._algType = algType;
+        _algType = algType;
     }
 
     /// <summary>
@@ -59,7 +59,7 @@ public abstract class Murmur3TestsBase
 #pragma warning disable RS0026 // Do not add multiple public overloads with optional parameters
     protected void Test(in string expected, in byte[] input, in string message, in int seed = 0x00000000) =>
 #pragma warning restore RS0026 // Do not add multiple public overloads with optional parameters
-        AreEqual(Parse(expected, AllowHexSpecifier, InvariantCulture), this.Hash(input, seed), message);
+        AreEqual(Parse(expected, AllowHexSpecifier, InvariantCulture), Hash(input, seed), message);
 
     /// <summary>
     /// Tests a UTF-8 string using the Murmur3 hashing algorithm variant.
@@ -74,7 +74,7 @@ public abstract class Murmur3TestsBase
 #pragma warning restore RS0026 // Do not add multiple public overloads with optional parameters
         AreEqual(
             Parse(expected, AllowHexSpecifier, InvariantCulture),
-            this.Hash(System.Text.Encoding.UTF8.GetBytes(input), seed),
+            Hash(System.Text.Encoding.UTF8.GetBytes(input), seed),
             message);
 
     /// <summary>
@@ -83,26 +83,27 @@ public abstract class Murmur3TestsBase
     /// ReSharper restore CommentTypo.
     /// </summary>
     /// <returns>An asynchronous <see cref="Task" />.</returns>
-    /// <param name="expected">The expected.</param>
+    /// <param name="expected">The expected value.</param>
+    /// <param name="token">The optional cancellation token.</param>
     /// <exception cref="InvalidOperationException">Hash algorithm constructor not found.</exception>
     /// <exception cref="InvalidOperationException">Hash invalid.</exception>
     // ReSharper disable once MethodTooLong
-    protected async Task TestSmHasherAsync(string expected)
+    protected async Task TestSmHasherAsync(string expected, CancellationToken token = default)
     {
         using HashAlgorithm alg =
-            this.GetAlgorithm() ?? throw new InvalidOperationException("Hash algorithm constructor not found.");
+            GetAlgorithm() ?? throw new InvalidOperationException("Hash algorithm constructor not found.");
         byte[] key = new byte[256];
 
         await using CryptoStream cryptoStream = new (Stream.Null, alg, CryptoStreamMode.Write);
         for (int i = 0; i < key.Length; i++)
         {
             key[i] = (byte)i;
-            using HashAlgorithm alg2 = this.GetAlgorithm(key.Length - i)
+            using HashAlgorithm alg2 = GetAlgorithm(key.Length - i)
                 ?? throw new InvalidOperationException("Hash algorithm constructor not found.");
-            cryptoStream.Write(alg2.ComputeHash(key, 0, i));
+            await cryptoStream.WriteAsync(alg2.ComputeHash(key, 0, i), token).ConfigureAwait(false);
         }
 
-        await cryptoStream.FlushFinalBlockAsync().ConfigureAwait(false);
+        await cryptoStream.FlushFinalBlockAsync(token).ConfigureAwait(false);
         if (alg.Hash is null)
         {
             throw new InvalidOperationException("Hash invalid.");
@@ -110,7 +111,7 @@ public abstract class Murmur3TestsBase
 
         AreEqual(
             Parse(expected, AllowHexSpecifier, InvariantCulture),
-            new BigInteger(alg.Hash),
+            new (alg.Hash),
             "SMHasher hash verification");
     }
 
@@ -124,7 +125,7 @@ public abstract class Murmur3TestsBase
     private BigInteger Hash(in ReadOnlySpan<byte> input, in int seed = 0x00000000)
     {
         using HashAlgorithm alg =
-            this.GetAlgorithm(seed) ?? throw new InvalidOperationException("Hash algorithm constructor not found.");
+            GetAlgorithm(seed) ?? throw new InvalidOperationException("Hash algorithm constructor not found.");
 
         // ReSharper disable once ComplexConditionExpression
         Span<byte> destination = stackalloc byte[alg.HashSize / 8];
@@ -132,7 +133,7 @@ public abstract class Murmur3TestsBase
 
         IsTrue(result);
         AreEqual(destination.Length, bytesWritten);
-        return new BigInteger(destination);
+        return new (destination);
     }
 
     /// <summary>
@@ -144,8 +145,8 @@ public abstract class Murmur3TestsBase
     private HashAlgorithm? GetAlgorithm(in int seed = 0x00000000)
     {
         System.Reflection.ConstructorInfo? constructor =
-            this._algType.GetConstructor(new[] { typeof(int).MakeByRefType() });
+            _algType.GetConstructor([typeof(int).MakeByRefType()]);
 
-        return constructor?.Invoke(new object[] { seed }) as HashAlgorithm;
+        return constructor?.Invoke([seed]) as HashAlgorithm;
     }
 }

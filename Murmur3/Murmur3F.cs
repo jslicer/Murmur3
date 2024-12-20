@@ -49,13 +49,13 @@ namespace Murmur3
         /// <param name="seed">The seed value.</param>
         public Murmur3F(in int seed = 0x00000000)
             : base(128, seed) =>
-            this.Init();
+            Init();
 
         /// <inheritdoc />
         /// <summary>
         /// Initializes an implementation of the <see cref="Murmur3Base" /> class.
         /// </summary>
-        public override void Initialize() => this.Init();
+        public override void Initialize() => Init();
 
         /// <inheritdoc />
         /// <summary>
@@ -63,8 +63,8 @@ namespace Murmur3
         /// </summary>
         protected override void Init()
         {
-            this._h1 = this.Seed;
-            this._h2 = this.Seed;
+            _h1 = Seed;
+            _h2 = Seed;
             base.Init();
         }
 
@@ -82,7 +82,7 @@ namespace Murmur3
         //// ReSharper disable once MethodTooLong
         protected override void HashCore(byte[] array, int ibStart, int cbSize)
         {
-            this.Length += cbSize;
+            Length += cbSize;
 
             const int BlockSizeInBytes = 16;
             int remainder = cbSize & (BlockSizeInBytes - 1);
@@ -94,20 +94,20 @@ namespace Murmur3
                 //// ReSharper disable once ComplexConditionExpression
                 ulong k2 = ToUInt64(array, i + (BlockSizeInBytes / 2));
 
-                this._h1 ^= C2 * RotateLeft(C1 * k1, 31);
-                this._h1 = RotateLeft(this._h1, 27);
-                this._h1 += this._h2;
-                this._h1 = (5 * this._h1) + 0x0000000052DCE729UL;
+                _h1 ^= C2 * RotateLeft(C1 * k1, 31);
+                _h1 = RotateLeft(_h1, 27);
+                _h1 += _h2;
+                _h1 = (5 * _h1) + 0x0000000052DCE729UL;
 
-                this._h2 ^= C1 * RotateLeft(C2 * k2, 33);
-                this._h2 = RotateLeft(this._h2, 31);
-                this._h2 += this._h1;
-                this._h2 = (5 * this._h2) + 0x0000000038495AB5UL;
+                _h2 ^= C1 * RotateLeft(C2 * k2, 33);
+                _h2 = RotateLeft(_h2, 31);
+                _h2 += _h1;
+                _h2 = (5 * _h2) + 0x0000000038495AB5UL;
             }
 
             if (remainder > 0)
             {
-                this.Tail(array, alignedLength, remainder);
+                Tail(array, alignedLength, remainder);
             }
         }
 
@@ -118,7 +118,7 @@ namespace Murmur3
         // ReSharper disable once MethodTooLong
         protected override void HashCore(ReadOnlySpan<byte> source)
         {
-            this.Length += source.Length;
+            Length += source.Length;
 
             const int BlockSizeInBytes = 16;
             int remainder = source.Length & (BlockSizeInBytes - 1);
@@ -131,20 +131,20 @@ namespace Murmur3
                 //// ReSharper disable once ComplexConditionExpression
                 ulong k2 = ToUInt64(array, i + (BlockSizeInBytes / 2));
 
-                this._h1 ^= C2 * RotateLeft(C1 * k1, 31);
-                this._h1 = RotateLeft(this._h1, 27);
-                this._h1 += this._h2;
-                this._h1 = (5 * this._h1) + 0x0000000052DCE729UL;
+                _h1 ^= C2 * RotateLeft(C1 * k1, 31);
+                _h1 = RotateLeft(_h1, 27);
+                _h1 += _h2;
+                _h1 = (5 * _h1) + 0x0000000052DCE729UL;
 
-                this._h2 ^= C1 * RotateLeft(C2 * k2, 33);
-                this._h2 = RotateLeft(this._h2, 31);
-                this._h2 += this._h1;
-                this._h2 = (5 * this._h2) + 0x0000000038495AB5UL;
+                _h2 ^= C1 * RotateLeft(C2 * k2, 33);
+                _h2 = RotateLeft(_h2, 31);
+                _h2 += _h1;
+                _h2 = (5 * _h2) + 0x0000000038495AB5UL;
             }
 
             if (remainder > 0)
             {
-                this.Tail(source, alignedLength, remainder);
+                Tail(source, alignedLength, remainder);
             }
         }
 
@@ -158,20 +158,20 @@ namespace Murmur3
         /// </returns>
         protected override byte[] HashFinal()
         {
-            this._h1 ^= (ulong)this.Length;
-            this._h2 ^= (ulong)this.Length;
+            _h1 ^= (ulong)Length;
+            _h2 ^= (ulong)Length;
 
-            this._h1 += this._h2;
-            this._h2 += this._h1;
+            _h1 += _h2;
+            _h2 += _h1;
 
-            this._h1 = FMix(this._h1);
-            this._h2 = FMix(this._h2);
+            _h1 = FMix(_h1);
+            _h2 = FMix(_h2);
 
-            this._h1 += this._h2;
-            this._h2 += this._h1;
+            _h1 += _h2;
+            _h2 += _h1;
 
-            byte[] b1 = GetBytes(this._h1);
-            byte[] b2 = GetBytes(this._h2);
+            byte[] b1 = GetBytes(_h1);
+            byte[] b2 = GetBytes(_h2);
             byte[] hash = new byte[b1.Length + b2.Length];
 
             b1.CopyTo(hash, 0);
@@ -190,20 +190,20 @@ namespace Murmur3
         // ReSharper disable once MethodTooLong
         protected override bool TryHashFinal(Span<byte> destination, out int bytesWritten)
         {
-            this._h1 ^= (ulong)this.Length;
-            this._h2 ^= (ulong)this.Length;
+            _h1 ^= (ulong)Length;
+            _h2 ^= (ulong)Length;
 
-            this._h1 += this._h2;
-            this._h2 += this._h1;
+            _h1 += _h2;
+            _h2 += _h1;
 
-            this._h1 = FMix(this._h1);
-            this._h2 = FMix(this._h2);
+            _h1 = FMix(_h1);
+            _h2 = FMix(_h2);
 
-            this._h1 += this._h2;
-            this._h2 += this._h1;
+            _h1 += _h2;
+            _h2 += _h1;
 
-            byte[] b1 = GetBytes(this._h1);
-            byte[] b2 = GetBytes(this._h2);
+            byte[] b1 = GetBytes(_h1);
+            byte[] b2 = GetBytes(_h2);
             byte[] bytes = new byte[b1.Length + b2.Length];
 
             b1.CopyTo(bytes, 0);
@@ -262,7 +262,7 @@ namespace Murmur3
                     k2 ^= (ulong)tail[position + 10] << 16;
                     k2 ^= (ulong)tail[position + 9] << 8;
                     k2 ^= tail[position + 8];
-                    this._h2 ^= C1 * RotateLeft(C2 * k2, 33);
+                    _h2 ^= C1 * RotateLeft(C2 * k2, 33);
                     k1 ^= (ulong)tail[position + 7] << 56;
                     k1 ^= (ulong)tail[position + 6] << 48;
                     k1 ^= (ulong)tail[position + 5] << 40;
@@ -271,7 +271,7 @@ namespace Murmur3
                     k1 ^= (ulong)tail[position + 2] << 16;
                     k1 ^= (ulong)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 31);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 31);
                     break;
                 case 14:
                     k2 ^= (ulong)tail[position + 13] << 40;
@@ -280,7 +280,7 @@ namespace Murmur3
                     k2 ^= (ulong)tail[position + 10] << 16;
                     k2 ^= (ulong)tail[position + 9] << 8;
                     k2 ^= tail[position + 8];
-                    this._h2 ^= C1 * RotateLeft(C2 * k2, 33);
+                    _h2 ^= C1 * RotateLeft(C2 * k2, 33);
                     k1 ^= (ulong)tail[position + 7] << 56;
                     k1 ^= (ulong)tail[position + 6] << 48;
                     k1 ^= (ulong)tail[position + 5] << 40;
@@ -289,7 +289,7 @@ namespace Murmur3
                     k1 ^= (ulong)tail[position + 2] << 16;
                     k1 ^= (ulong)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 31);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 31);
                     break;
                 case 13:
                     k2 ^= (ulong)tail[position + 12] << 32;
@@ -297,7 +297,7 @@ namespace Murmur3
                     k2 ^= (ulong)tail[position + 10] << 16;
                     k2 ^= (ulong)tail[position + 9] << 8;
                     k2 ^= tail[position + 8];
-                    this._h2 ^= C1 * RotateLeft(C2 * k2, 33);
+                    _h2 ^= C1 * RotateLeft(C2 * k2, 33);
                     k1 ^= (ulong)tail[position + 7] << 56;
                     k1 ^= (ulong)tail[position + 6] << 48;
                     k1 ^= (ulong)tail[position + 5] << 40;
@@ -306,14 +306,14 @@ namespace Murmur3
                     k1 ^= (ulong)tail[position + 2] << 16;
                     k1 ^= (ulong)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 31);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 31);
                     break;
                 case 12:
                     k2 ^= (ulong)tail[position + 11] << 24;
                     k2 ^= (ulong)tail[position + 10] << 16;
                     k2 ^= (ulong)tail[position + 9] << 8;
                     k2 ^= tail[position + 8];
-                    this._h2 ^= C1 * RotateLeft(C2 * k2, 33);
+                    _h2 ^= C1 * RotateLeft(C2 * k2, 33);
                     k1 ^= (ulong)tail[position + 7] << 56;
                     k1 ^= (ulong)tail[position + 6] << 48;
                     k1 ^= (ulong)tail[position + 5] << 40;
@@ -322,13 +322,13 @@ namespace Murmur3
                     k1 ^= (ulong)tail[position + 2] << 16;
                     k1 ^= (ulong)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 31);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 31);
                     break;
                 case 11:
                     k2 ^= (ulong)tail[position + 10] << 16;
                     k2 ^= (ulong)tail[position + 9] << 8;
                     k2 ^= tail[position + 8];
-                    this._h2 ^= C1 * RotateLeft(C2 * k2, 33);
+                    _h2 ^= C1 * RotateLeft(C2 * k2, 33);
                     k1 ^= (ulong)tail[position + 7] << 56;
                     k1 ^= (ulong)tail[position + 6] << 48;
                     k1 ^= (ulong)tail[position + 5] << 40;
@@ -337,12 +337,12 @@ namespace Murmur3
                     k1 ^= (ulong)tail[position + 2] << 16;
                     k1 ^= (ulong)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 31);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 31);
                     break;
                 case 10:
                     k2 ^= (ulong)tail[position + 9] << 8;
                     k2 ^= tail[position + 8];
-                    this._h2 ^= C1 * RotateLeft(C2 * k2, 33);
+                    _h2 ^= C1 * RotateLeft(C2 * k2, 33);
                     k1 ^= (ulong)tail[position + 7] << 56;
                     k1 ^= (ulong)tail[position + 6] << 48;
                     k1 ^= (ulong)tail[position + 5] << 40;
@@ -351,11 +351,11 @@ namespace Murmur3
                     k1 ^= (ulong)tail[position + 2] << 16;
                     k1 ^= (ulong)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 31);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 31);
                     break;
                 case 9:
                     k2 ^= tail[position + 8];
-                    this._h2 ^= C1 * RotateLeft(C2 * k2, 33);
+                    _h2 ^= C1 * RotateLeft(C2 * k2, 33);
                     k1 ^= (ulong)tail[position + 7] << 56;
                     k1 ^= (ulong)tail[position + 6] << 48;
                     k1 ^= (ulong)tail[position + 5] << 40;
@@ -364,7 +364,7 @@ namespace Murmur3
                     k1 ^= (ulong)tail[position + 2] << 16;
                     k1 ^= (ulong)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 31);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 31);
                     break;
                 case 8:
                     k1 ^= (ulong)tail[position + 7] << 56;
@@ -375,7 +375,7 @@ namespace Murmur3
                     k1 ^= (ulong)tail[position + 2] << 16;
                     k1 ^= (ulong)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 31);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 31);
                     break;
                 case 7:
                     k1 ^= (ulong)tail[position + 6] << 48;
@@ -385,7 +385,7 @@ namespace Murmur3
                     k1 ^= (ulong)tail[position + 2] << 16;
                     k1 ^= (ulong)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 31);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 31);
                     break;
                 case 6:
                     k1 ^= (ulong)tail[position + 5] << 40;
@@ -394,7 +394,7 @@ namespace Murmur3
                     k1 ^= (ulong)tail[position + 2] << 16;
                     k1 ^= (ulong)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 31);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 31);
                     break;
                 case 5:
                     k1 ^= (ulong)tail[position + 4] << 32;
@@ -402,29 +402,29 @@ namespace Murmur3
                     k1 ^= (ulong)tail[position + 2] << 16;
                     k1 ^= (ulong)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 31);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 31);
                     break;
                 case 4:
                     k1 ^= (ulong)tail[position + 3] << 24;
                     k1 ^= (ulong)tail[position + 2] << 16;
                     k1 ^= (ulong)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 31);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 31);
                     break;
                 case 3:
                     k1 ^= (ulong)tail[position + 2] << 16;
                     k1 ^= (ulong)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 31);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 31);
                     break;
                 case 2:
                     k1 ^= (ulong)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 31);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 31);
                     break;
                 case 1:
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 31);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 31);
                     break;
             }
         }
@@ -453,7 +453,7 @@ namespace Murmur3
                     k2 ^= (ulong)tail[position + 10] << 16;
                     k2 ^= (ulong)tail[position + 9] << 8;
                     k2 ^= tail[position + 8];
-                    this._h2 ^= C1 * RotateLeft(C2 * k2, 33);
+                    _h2 ^= C1 * RotateLeft(C2 * k2, 33);
                     k1 ^= (ulong)tail[position + 7] << 56;
                     k1 ^= (ulong)tail[position + 6] << 48;
                     k1 ^= (ulong)tail[position + 5] << 40;
@@ -462,7 +462,7 @@ namespace Murmur3
                     k1 ^= (ulong)tail[position + 2] << 16;
                     k1 ^= (ulong)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 31);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 31);
                     break;
                 case 14:
                     k2 ^= (ulong)tail[position + 13] << 40;
@@ -471,7 +471,7 @@ namespace Murmur3
                     k2 ^= (ulong)tail[position + 10] << 16;
                     k2 ^= (ulong)tail[position + 9] << 8;
                     k2 ^= tail[position + 8];
-                    this._h2 ^= C1 * RotateLeft(C2 * k2, 33);
+                    _h2 ^= C1 * RotateLeft(C2 * k2, 33);
                     k1 ^= (ulong)tail[position + 7] << 56;
                     k1 ^= (ulong)tail[position + 6] << 48;
                     k1 ^= (ulong)tail[position + 5] << 40;
@@ -480,7 +480,7 @@ namespace Murmur3
                     k1 ^= (ulong)tail[position + 2] << 16;
                     k1 ^= (ulong)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 31);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 31);
                     break;
                 case 13:
                     k2 ^= (ulong)tail[position + 12] << 32;
@@ -488,7 +488,7 @@ namespace Murmur3
                     k2 ^= (ulong)tail[position + 10] << 16;
                     k2 ^= (ulong)tail[position + 9] << 8;
                     k2 ^= tail[position + 8];
-                    this._h2 ^= C1 * RotateLeft(C2 * k2, 33);
+                    _h2 ^= C1 * RotateLeft(C2 * k2, 33);
                     k1 ^= (ulong)tail[position + 7] << 56;
                     k1 ^= (ulong)tail[position + 6] << 48;
                     k1 ^= (ulong)tail[position + 5] << 40;
@@ -497,14 +497,14 @@ namespace Murmur3
                     k1 ^= (ulong)tail[position + 2] << 16;
                     k1 ^= (ulong)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 31);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 31);
                     break;
                 case 12:
                     k2 ^= (ulong)tail[position + 11] << 24;
                     k2 ^= (ulong)tail[position + 10] << 16;
                     k2 ^= (ulong)tail[position + 9] << 8;
                     k2 ^= tail[position + 8];
-                    this._h2 ^= C1 * RotateLeft(C2 * k2, 33);
+                    _h2 ^= C1 * RotateLeft(C2 * k2, 33);
                     k1 ^= (ulong)tail[position + 7] << 56;
                     k1 ^= (ulong)tail[position + 6] << 48;
                     k1 ^= (ulong)tail[position + 5] << 40;
@@ -513,13 +513,13 @@ namespace Murmur3
                     k1 ^= (ulong)tail[position + 2] << 16;
                     k1 ^= (ulong)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 31);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 31);
                     break;
                 case 11:
                     k2 ^= (ulong)tail[position + 10] << 16;
                     k2 ^= (ulong)tail[position + 9] << 8;
                     k2 ^= tail[position + 8];
-                    this._h2 ^= C1 * RotateLeft(C2 * k2, 33);
+                    _h2 ^= C1 * RotateLeft(C2 * k2, 33);
                     k1 ^= (ulong)tail[position + 7] << 56;
                     k1 ^= (ulong)tail[position + 6] << 48;
                     k1 ^= (ulong)tail[position + 5] << 40;
@@ -528,12 +528,12 @@ namespace Murmur3
                     k1 ^= (ulong)tail[position + 2] << 16;
                     k1 ^= (ulong)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 31);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 31);
                     break;
                 case 10:
                     k2 ^= (ulong)tail[position + 9] << 8;
                     k2 ^= tail[position + 8];
-                    this._h2 ^= C1 * RotateLeft(C2 * k2, 33);
+                    _h2 ^= C1 * RotateLeft(C2 * k2, 33);
                     k1 ^= (ulong)tail[position + 7] << 56;
                     k1 ^= (ulong)tail[position + 6] << 48;
                     k1 ^= (ulong)tail[position + 5] << 40;
@@ -542,11 +542,11 @@ namespace Murmur3
                     k1 ^= (ulong)tail[position + 2] << 16;
                     k1 ^= (ulong)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 31);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 31);
                     break;
                 case 9:
                     k2 ^= tail[position + 8];
-                    this._h2 ^= C1 * RotateLeft(C2 * k2, 33);
+                    _h2 ^= C1 * RotateLeft(C2 * k2, 33);
                     k1 ^= (ulong)tail[position + 7] << 56;
                     k1 ^= (ulong)tail[position + 6] << 48;
                     k1 ^= (ulong)tail[position + 5] << 40;
@@ -555,7 +555,7 @@ namespace Murmur3
                     k1 ^= (ulong)tail[position + 2] << 16;
                     k1 ^= (ulong)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 31);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 31);
                     break;
                 case 8:
                     k1 ^= (ulong)tail[position + 7] << 56;
@@ -566,7 +566,7 @@ namespace Murmur3
                     k1 ^= (ulong)tail[position + 2] << 16;
                     k1 ^= (ulong)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 31);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 31);
                     break;
                 case 7:
                     k1 ^= (ulong)tail[position + 6] << 48;
@@ -576,7 +576,7 @@ namespace Murmur3
                     k1 ^= (ulong)tail[position + 2] << 16;
                     k1 ^= (ulong)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 31);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 31);
                     break;
                 case 6:
                     k1 ^= (ulong)tail[position + 5] << 40;
@@ -585,7 +585,7 @@ namespace Murmur3
                     k1 ^= (ulong)tail[position + 2] << 16;
                     k1 ^= (ulong)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 31);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 31);
                     break;
                 case 5:
                     k1 ^= (ulong)tail[position + 4] << 32;
@@ -593,29 +593,29 @@ namespace Murmur3
                     k1 ^= (ulong)tail[position + 2] << 16;
                     k1 ^= (ulong)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 31);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 31);
                     break;
                 case 4:
                     k1 ^= (ulong)tail[position + 3] << 24;
                     k1 ^= (ulong)tail[position + 2] << 16;
                     k1 ^= (ulong)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 31);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 31);
                     break;
                 case 3:
                     k1 ^= (ulong)tail[position + 2] << 16;
                     k1 ^= (ulong)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 31);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 31);
                     break;
                 case 2:
                     k1 ^= (ulong)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 31);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 31);
                     break;
                 case 1:
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 31);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 31);
                     break;
             }
         }

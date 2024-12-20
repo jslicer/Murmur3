@@ -29,29 +29,31 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     }
 
     /// <summary>
-    /// Tests an empty byte array with an input seed of 0x00000000.
+    /// Tests an empty <see langword="byte" /> array with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
-    public void TestEmptyInputSeed0() => this.Test(
+    public void TestEmptyInputSeed0() => Test(
         "00000000",
-        Array.Empty<byte>(),
+        [],
         "with zero data and zero seed, everything becomes zero");
 
     /// <summary>
-    /// Tests an empty byte array with an input seed of 0x00000001.
+    /// Tests an empty <see langword="byte" /> array with an input seed of 0x00000001.
     /// </summary>
     [TestMethod]
     public void TestEmptyInputSeed1() =>
-        this.Test("514E28B7", Array.Empty<byte>(), "ignores nearly all the math", 0x00000001);
+#pragma warning disable SA1010 // Opening square brackets should be spaced correctly
+        Test("514E28B7", [], "ignores nearly all the math", 0x00000001);
+#pragma warning restore SA1010 // Opening square brackets should be spaced correctly
 
     /// <summary>
     /// ReSharper disable once CommentTypo
-    /// Tests an empty byte array with an input seed of 0xFFFFFFFF.
+    /// Tests an empty <see langword="byte" /> array with an input seed of 0xFFFFFFFF.
     /// </summary>
     [TestMethod]
     //// ReSharper disable once InconsistentNaming
     //// ReSharper disable IdentifierTypo
-    public void TestEmptyInputSeedFFFFFFFF() => this.Test(
+    public void TestEmptyInputSeedFFFFFFFF() => Test(
     //// ReSharper restore IdentifierTypo
 #pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable SA1114 // Parameter list should follow declaration
@@ -59,7 +61,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
         //// ReSharper disable once StyleCop.SA1118
 #pragma warning restore SA1114 // Parameter list should follow declaration
 #pragma warning restore IDE0079 // Remove unnecessary suppression
-        Array.Empty<byte>(),
+        [],
         "make sure your seed uses unsigned 32-bit math",
         unchecked((int)0xFFFFFFFFU));
 
@@ -70,7 +72,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     [TestMethod]
     //// ReSharper disable once InconsistentNaming
     //// ReSharper disable IdentifierTypo
-    public void TestFFFFFFFFInputSeed0() => this.Test(
+    public void TestFFFFFFFFInputSeed0() => Test(
     //// ReSharper restore IdentifierTypo
 #pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable SA1114 // Parameter list should follow declaration
@@ -79,17 +81,17 @@ public sealed class Murmur3ATests : Murmur3TestsBase
 #pragma warning restore SA1114 // Parameter list should follow declaration
 #pragma warning restore IDE0079 // Remove unnecessary suppression
         //// ReSharper disable once StyleCop.SA1502
-        new[] { (byte)0xFF, (byte)0xFF, (byte)0xFF, (byte)0xFF },
+        [0xFF, 0xFF, 0xFF, 0xFF],
         "make sure 4-byte chunks use unsigned math");
 
     /// <summary>
     /// Tests an array with bytes 0x87654321 with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
-    public void Test21436587InputSeed0() => this.Test(
+    public void Test21436587InputSeed0() => Test(
         "F55B516B",
         //// ReSharper disable once StyleCop.SA1502
-        new[] { (byte)0x21, (byte)0x43, (byte)0x65, (byte)0x87 },
+        [0x21, 0x43, 0x65, 0x87],
         "Endian order. UInt32 should end up as 0x87654321");
 
     /// <summary>
@@ -99,7 +101,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     [TestMethod]
     //// ReSharper disable once InconsistentNaming
     //// ReSharper disable IdentifierTypo
-    public void Test21436587InputSeed5082EDEE() => this.Test(
+    public void Test21436587InputSeed5082EDEE() => Test(
     //// ReSharper restore IdentifierTypo
 #pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable SA1114 // Parameter list should follow declaration
@@ -108,7 +110,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
 #pragma warning restore SA1114 // Parameter list should follow declaration
 #pragma warning restore IDE0079 // Remove unnecessary suppression
         //// ReSharper disable once StyleCop.SA1502
-        new[] { (byte)0x21, (byte)0x43, (byte)0x65, (byte)0x87 },
+        [0x21, 0x43, 0x65, 0x87],
         "Special seed value eliminates initial key with xor",
         0x5082EDEE);
 
@@ -116,7 +118,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// Tests an array with bytes 0x654321 with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
-    public void Test214365InputSeed0() => this.Test(
+    public void Test214365InputSeed0() => Test(
         "7E4A8634",
         //// ReSharper disable once StyleCop.SA1502
         "!Ce"u8.ToArray(),
@@ -126,47 +128,47 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// Tests an array with bytes 0x4321 with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
-    public void Test2143InputSeed0() => this.Test(
+    public void Test2143InputSeed0() => Test(
         "A0F7B07A",
         //// ReSharper disable once StyleCop.SA1502
         "!C"u8.ToArray(),
         "Only two bytes. Should end up as 0x4321");
 
     /// <summary>
-    /// Tests an array with byte 0x21 with an input seed of 0x00000000.
+    /// Tests an array with <see langword="byte" /> 0x21 with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
     public void Test21InputSeed0() =>
         //// ReSharper disable once StyleCop.SA1502
-        this.Test("72661CF4", "!"u8.ToArray(), "Only one byte. Should end up as 0x21");
+        Test("72661CF4", "!"u8.ToArray(), "Only one byte. Should end up as 0x21");
 
     /// <summary>
-    /// Tests an array with bytes 0x00000000 with an input seed of 0x00000000.
+    /// Tests an array with <see langword="byte" />s 0x00000000 with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
     public void Test00000000InputSeed0() =>
-        this.Test("2362F9DE", new byte[4], "Make sure compiler doesn't see zero and convert to null");
+        Test("2362F9DE", new byte[4], "Make sure compiler doesn't see zero and convert to null");
 
     /// <summary>
-    /// Tests an array with bytes 0x000000 with an input seed of 0x00000000.
+    /// Tests an array with <see langword="byte" />s 0x000000 with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
     public void Test000000InputSeed0() =>
-        this.Test("85F0B427", new byte[3], "Make sure compiler doesn't see zero and convert to null");
+        Test("85F0B427", new byte[3], "Make sure compiler doesn't see zero and convert to null");
 
     /// <summary>
-    /// Tests an array with bytes 0x0000 with an input seed of 0x00000000.
+    /// Tests an array with <see langword="byte" />s 0x0000 with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
     public void Test0000InputSeed0() =>
-        this.Test("30F4C306", new byte[2], "Make sure compiler doesn't see zero and convert to null");
+        Test("30F4C306", new byte[2], "Make sure compiler doesn't see zero and convert to null");
 
     /// <summary>
-    /// Tests an array with bytes 0x00 with an input seed of 0x00000000.
+    /// Tests an array with <see langword="byte" />s 0x00 with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
     public void Test00InputSeed0() =>
-        this.Test("514E28B7", new byte[1], "Make sure compiler doesn't see zero and convert to null");
+        Test("514E28B7", new byte[1], "Make sure compiler doesn't see zero and convert to null");
 
     /// <summary>
     /// ReSharper disable CommentTypo
@@ -175,7 +177,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// </summary>
     [TestMethod]
     //// ReSharper disable IdentifierTypo
-    public void TestLoremIpsumInputSeed0() => this.Test(
+    public void TestLoremIpsumInputSeed0() => Test(
     //// ReSharper restore IdentifierTypo
 #pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable SA1114 // Parameter list should follow declaration
@@ -192,7 +194,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
-    public void TestQuickBrownFoxInputSeed0() => this.Test(
+    public void TestQuickBrownFoxInputSeed0() => Test(
         "2E4FF723",
         "The quick brown fox jumps over the lazy dog",
         "lengthy string interpreted as UTF-8");
@@ -202,7 +204,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// </summary>
     [TestMethod]
     //// ReSharper disable InconsistentNaming
-    public void TestQuickBrownFoxInputSeed9747b28c() => this.Test(
+    public void TestQuickBrownFoxInputSeed9747b28c() => Test(
     //// ReSharper restore InconsistentNaming
 #pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable SA1114 // Parameter list should follow declaration
@@ -219,7 +221,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// </summary>
     [TestMethod]
     //// ReSharper disable InconsistentNaming
-    public void TestQuickBrownFoxInputSeedC58f1a7b() => this.Test(
+    public void TestQuickBrownFoxInputSeedC58f1a7b() => Test(
     //// ReSharper restore InconsistentNaming
 #pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable SA1114 // Parameter list should follow declaration
@@ -236,5 +238,9 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// </summary>
     /// <returns>An asynchronous <see cref="Task" />.</returns>
     [TestMethod]
-    public async Task TestSmHasherAsync() => await this.TestSmHasherAsync("B0F57EE3").ConfigureAwait(false);
+    public async Task TestSmHasherAsync()
+    {
+        using CancellationTokenSource cts = new ();
+        await TestSmHasherAsync("B0F57EE3", cts.Token).ConfigureAwait(true);
+    }
 }

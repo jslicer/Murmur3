@@ -44,13 +44,13 @@ namespace Murmur3
         /// <param name="seed">The seed value.</param>
         public Murmur3A(in int seed = 0x00000000)
             : base(32, seed) =>
-            this.Init();
+            Init();
 
         /// <inheritdoc />
         /// <summary>
         /// Initializes an implementation of the <see cref="Murmur3A" /> class.
         /// </summary>
-        public override void Initialize() => this.Init();
+        public override void Initialize() => Init();
 
         /// <inheritdoc />
         /// <summary>
@@ -58,7 +58,7 @@ namespace Murmur3
         /// </summary>
         protected override void Init()
         {
-            this._h1 = this.Seed;
+            _h1 = Seed;
             base.Init();
         }
 
@@ -75,7 +75,7 @@ namespace Murmur3
 #pragma warning restore IDE0079 // Remove unnecessary suppression
         protected override void HashCore(byte[] array, int ibStart, int cbSize)
         {
-            this.Length += cbSize;
+            Length += cbSize;
 
             const int BlockSizeInBytes = 4;
             int remainder = cbSize & (BlockSizeInBytes - 1);
@@ -83,13 +83,13 @@ namespace Murmur3
 
             for (int i = ibStart; i < alignedLength; i += BlockSizeInBytes)
             {
-                this._h1 ^= C2 * RotateLeft(C1 * ToUInt32(array, i), 15);
-                this._h1 = (5 * RotateLeft(this._h1, 13)) + 0xE6546B64;
+                _h1 ^= C2 * RotateLeft(C1 * ToUInt32(array, i), 15);
+                _h1 = (5 * RotateLeft(_h1, 13)) + 0xE6546B64;
             }
 
             if (remainder > 0)
             {
-                this.Tail(array, alignedLength, remainder);
+                Tail(array, alignedLength, remainder);
             }
         }
 
@@ -99,7 +99,7 @@ namespace Murmur3
         /// <param name="source">The input to compute the hash code for.</param>
         protected override void HashCore(ReadOnlySpan<byte> source)
         {
-            this.Length += source.Length;
+            Length += source.Length;
 
             const int BlockSizeInBytes = 4;
             int remainder = source.Length & (BlockSizeInBytes - 1);
@@ -108,13 +108,13 @@ namespace Murmur3
 
             for (int i = 0; i < alignedLength; i += BlockSizeInBytes)
             {
-                this._h1 ^= C2 * RotateLeft(C1 * ToUInt32(array, i), 15);
-                this._h1 = (5 * RotateLeft(this._h1, 13)) + 0xE6546B64;
+                _h1 ^= C2 * RotateLeft(C1 * ToUInt32(array, i), 15);
+                _h1 = (5 * RotateLeft(_h1, 13)) + 0xE6546B64;
             }
 
             if (remainder > 0)
             {
-                this.Tail(source, alignedLength, remainder);
+                Tail(source, alignedLength, remainder);
             }
         }
 
@@ -128,8 +128,8 @@ namespace Murmur3
         /// </returns>
         protected override byte[] HashFinal()
         {
-            this._h1 = FMix(this._h1 ^ (uint)this.Length);
-            return GetBytes(this._h1);
+            _h1 = FMix(_h1 ^ (uint)Length);
+            return GetBytes(_h1);
         }
 
         /// <summary>
@@ -142,9 +142,9 @@ namespace Murmur3
         /// value; otherwise, <see langword="false" />.</returns>
         protected override bool TryHashFinal(Span<byte> destination, out int bytesWritten)
         {
-            this._h1 = FMix(this._h1 ^ (uint)this.Length);
+            _h1 = FMix(_h1 ^ (uint)Length);
 
-            byte[] bytes = GetBytes(this._h1);
+            byte[] bytes = GetBytes(_h1);
 
             bytes.CopyTo(destination);
             bytesWritten = bytes.Length;
@@ -193,16 +193,16 @@ namespace Murmur3
                     k1 ^= (uint)tail[position + 2] << 16;
                     k1 ^= (uint)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
                 case 2:
                     k1 ^= (uint)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
                 case 1:
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
             }
         }
@@ -224,16 +224,16 @@ namespace Murmur3
                     k1 ^= (uint)tail[position + 2] << 16;
                     k1 ^= (uint)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
                 case 2:
                     k1 ^= (uint)tail[position + 1] << 8;
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
                 case 1:
                     k1 ^= tail[position];
-                    this._h1 ^= C2 * RotateLeft(C1 * k1, 15);
+                    _h1 ^= C2 * RotateLeft(C1 * k1, 15);
                     break;
             }
         }
