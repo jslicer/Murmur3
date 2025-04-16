@@ -42,9 +42,11 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// </summary>
     [TestMethod]
     public void TestEmptyInputSeed1() =>
+#pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable SA1010 // Opening square brackets should be spaced correctly
         Test("514E28B7", [], "ignores nearly all the math", 0x00000001);
 #pragma warning restore SA1010 // Opening square brackets should be spaced correctly
+#pragma warning restore IDE0079 // Remove unnecessary suppression
 
     /// <summary>
     /// ReSharper disable once CommentTypo

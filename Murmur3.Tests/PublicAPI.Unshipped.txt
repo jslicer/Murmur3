@@ -1,4 +1,13 @@
-﻿Murmur3.Tests.Murmur3ATests
+﻿Murmur3.Tests.BogusHasherTests
+Murmur3.Tests.BogusHasherTests.BogusHasherTests() -> void
+Murmur3.Tests.BogusHasherTests.EnsureNonMurmur3HasherCaughtAsync() -> System.Threading.Tasks.Task!
+Murmur3.Tests.BogusMurmurTests1
+Murmur3.Tests.BogusMurmurTests1.BogusMurmurTests1() -> void
+Murmur3.Tests.BogusMurmurTests1.EnsureHashOfNullCaughtAsync() -> System.Threading.Tasks.Task!
+Murmur3.Tests.BogusMurmurTests2
+Murmur3.Tests.BogusMurmurTests2.BogusMurmurTests2() -> void
+Murmur3.Tests.BogusMurmurTests2.EnsureBadConstructorCaughtAsync() -> System.Threading.Tasks.Task!
+Murmur3.Tests.Murmur3ATests
 Murmur3.Tests.Murmur3ATests.Murmur3ATests() -> void
 Murmur3.Tests.Murmur3ATests.Test00000000InputSeed0() -> void
 Murmur3.Tests.Murmur3ATests.Test000000InputSeed0() -> void

@@ -17,6 +17,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 /// </summary>
 /// <seealso cref="Murmur3TestsBase" />
 [TestClass]
+//// ReSharper disable once ClassTooBig
 public sealed class Murmur3CTests : Murmur3TestsBase
 {
     /// <summary>

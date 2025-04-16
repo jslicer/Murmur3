@@ -35,16 +35,9 @@ public abstract class Murmur3TestsBase
     /// <param name="algType">Type of the Murmur3 hashing algorithm variant.</param>
     /// <exception cref="ArgumentNullException"><paramref name="algType" /> cannot be
     /// <see langword="null" />.</exception>
-    /// <exception cref="InvalidOperationException"><paramref name="algType" /> must be a descendant of
-    /// Murmur3Base.</exception>
     protected Murmur3TestsBase(in Type algType)
     {
         ArgumentNullException.ThrowIfNull(algType);
-        if (!algType.IsAssignableTo(typeof(Murmur3Base)))
-        {
-            throw new InvalidOperationException("The algorithm type must be a descendant of Murmur3Base.");
-        }
-
         _algType = algType;
     }
 
@@ -56,9 +49,11 @@ public abstract class Murmur3TestsBase
     /// <param name="message">The message to show if the test fails.</param>
     /// <param name="seed">The seed value.</param>
     // ReSharper disable once TooManyArguments
+#pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable RS0026 // Do not add multiple public overloads with optional parameters
     protected void Test(in string expected, in byte[] input, in string message, in int seed = 0x00000000) =>
 #pragma warning restore RS0026 // Do not add multiple public overloads with optional parameters
+#pragma warning restore IDE0079 // Remove unnecessary suppression
         AreEqual(Parse(expected, AllowHexSpecifier, InvariantCulture), Hash(input, seed), message);
 
     /// <summary>
@@ -69,9 +64,11 @@ public abstract class Murmur3TestsBase
     /// <param name="message">The message to show if the test fails.</param>
     /// <param name="seed">The seed value.</param>
     // ReSharper disable once TooManyArguments
+#pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable RS0026 // Do not add multiple public overloads with optional parameters
     protected void Test(in string expected, in string input, in string message, in int seed = 0x00000000) =>
 #pragma warning restore RS0026 // Do not add multiple public overloads with optional parameters
+#pragma warning restore IDE0079 // Remove unnecessary suppression
         AreEqual(
             Parse(expected, AllowHexSpecifier, InvariantCulture),
             Hash(System.Text.Encoding.UTF8.GetBytes(input), seed),
@@ -85,13 +82,13 @@ public abstract class Murmur3TestsBase
     /// <returns>An asynchronous <see cref="Task" />.</returns>
     /// <param name="expected">The expected value.</param>
     /// <param name="token">The optional cancellation token.</param>
-    /// <exception cref="InvalidOperationException">Hash algorithm constructor not found.</exception>
+    /// <exception cref="MissingMethodException">Hash algorithm constructor not found.</exception>
     /// <exception cref="InvalidOperationException">Hash invalid.</exception>
     // ReSharper disable once MethodTooLong
     protected async Task TestSmHasherAsync(string expected, CancellationToken token = default)
     {
         using HashAlgorithm alg =
-            GetAlgorithm() ?? throw new InvalidOperationException("Hash algorithm constructor not found.");
+            GetAlgorithm() ?? throw new MissingMethodException("Hash algorithm constructor not found.");
         byte[] key = new byte[256];
 
         await using CryptoStream cryptoStream = new (Stream.Null, alg, CryptoStreamMode.Write);
@@ -99,7 +96,7 @@ public abstract class Murmur3TestsBase
         {
             key[i] = (byte)i;
             using HashAlgorithm alg2 = GetAlgorithm(key.Length - i)
-                ?? throw new InvalidOperationException("Hash algorithm constructor not found.");
+                ?? throw new MissingMethodException("Hash algorithm constructor not found.");
             await cryptoStream.WriteAsync(alg2.ComputeHash(key, 0, i), token).ConfigureAwait(false);
         }
 
@@ -142,8 +139,15 @@ public abstract class Murmur3TestsBase
     /// <param name="seed">The seed value.</param>
     /// <returns>A new instance of specified Murmur3 hashing algorithm variant, or <see langword="null" /> if one could
     /// not be found.</returns>
+    /// <exception cref="InvalidOperationException"><see cref="_algType" /> must be a descendant of
+    /// Murmur3Base.</exception>
     private HashAlgorithm? GetAlgorithm(in int seed = 0x00000000)
     {
+        if (!_algType.IsAssignableTo(typeof(Murmur3Base)))
+        {
+            throw new InvalidOperationException("The algorithm type must be a descendant of Murmur3Base.");
+        }
+
         System.Reflection.ConstructorInfo? constructor =
             _algType.GetConstructor([typeof(int).MakeByRefType()]);
 
