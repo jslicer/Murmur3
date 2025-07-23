@@ -10,8 +10,8 @@
 // Ignore Spelling: alg
 namespace Murmur3.Tests;
 
+using System.IO.Hashing;
 using System.Numerics;
-using System.Security.Cryptography;
 
 using static System.Globalization.CultureInfo;
 using static System.Globalization.NumberStyles;
@@ -25,12 +25,17 @@ using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 public abstract class Murmur3TestsBase
 {
     /// <summary>
+    /// The empty hash value used for testing.
+    /// </summary>
+    private static readonly byte[] _EmptyHash = new byte[4];
+
+    /// <summary>
     /// Type of the Murmur3 hashing algorithm variant.
     /// </summary>
     private readonly Type _algType;
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="Murmur3TestsBase"/> class.
+    /// Initializes a new instance of the <see cref="Murmur3TestsBase" /> class.
     /// </summary>
     /// <param name="algType">Type of the Murmur3 hashing algorithm variant.</param>
     /// <exception cref="ArgumentNullException"><paramref name="algType" /> cannot be
@@ -79,36 +84,38 @@ public abstract class Murmur3TestsBase
     /// Tests using the SMHasher KeysetTest VerificationTest.
     /// ReSharper restore CommentTypo.
     /// </summary>
-    /// <returns>An asynchronous <see cref="Task" />.</returns>
     /// <param name="expected">The expected value.</param>
-    /// <param name="token">The optional cancellation token.</param>
     /// <exception cref="MissingMethodException">Hash algorithm constructor not found.</exception>
     /// <exception cref="InvalidOperationException">Hash invalid.</exception>
     // ReSharper disable once MethodTooLong
-    protected async Task TestSmHasherAsync(string expected, CancellationToken token = default)
+    protected void TestSmHasher(string expected)
     {
-        using HashAlgorithm alg =
+        // ReSharper disable once UnthrowableException
+        NonCryptographicHashAlgorithm alg =
             GetAlgorithm() ?? throw new MissingMethodException("Hash algorithm constructor not found.");
         byte[] key = new byte[256];
 
-        await using CryptoStream cryptoStream = new (Stream.Null, alg, CryptoStreamMode.Write);
+        alg.Reset();
         for (int i = 0; i < key.Length; i++)
         {
-            key[i] = (byte)i;
-            using HashAlgorithm alg2 = GetAlgorithm(key.Length - i)
+            // ReSharper disable once UnthrowableException
+            NonCryptographicHashAlgorithm alg2 = GetAlgorithm(key.Length - i)
                 ?? throw new MissingMethodException("Hash algorithm constructor not found.");
-            await cryptoStream.WriteAsync(alg2.ComputeHash(key, 0, i), token).ConfigureAwait(false);
+
+            alg2.Reset();
+            key[i] = (byte)i;
+            alg2.Append(key.AsSpan(0, i));
+            alg.Append(alg2.GetCurrentHash());
         }
 
-        await cryptoStream.FlushFinalBlockAsync(token).ConfigureAwait(false);
-        if (alg.Hash is null)
+        if (alg.GetCurrentHash().SequenceEqual(_EmptyHash))
         {
             throw new InvalidOperationException("Hash invalid.");
         }
 
         AreEqual(
             Parse(expected, AllowHexSpecifier, InvariantCulture),
-            new (alg.Hash),
+            new(alg.GetCurrentHash()),
             "SMHasher hash verification");
     }
 
@@ -121,16 +128,15 @@ public abstract class Murmur3TestsBase
     /// array.</returns>
     private BigInteger Hash(in ReadOnlySpan<byte> input, in int seed = 0x00000000)
     {
-        using HashAlgorithm alg =
+        NonCryptographicHashAlgorithm alg =
             GetAlgorithm(seed) ?? throw new InvalidOperationException("Hash algorithm constructor not found.");
 
         // ReSharper disable once ComplexConditionExpression
-        Span<byte> destination = stackalloc byte[alg.HashSize / 8];
-        bool result = alg.TryComputeHash(input, destination, out int bytesWritten);
+        Span<byte> destination = stackalloc byte[alg.HashLengthInBytes];
 
-        IsTrue(result);
-        AreEqual(destination.Length, bytesWritten);
-        return new (destination);
+        alg.Append(input);
+        alg.GetCurrentHash(destination);
+        return new(destination);
     }
 
     /// <summary>
@@ -141,7 +147,7 @@ public abstract class Murmur3TestsBase
     /// not be found.</returns>
     /// <exception cref="InvalidOperationException"><see cref="_algType" /> must be a descendant of
     /// Murmur3Base.</exception>
-    private HashAlgorithm? GetAlgorithm(in int seed = 0x00000000)
+    private NonCryptographicHashAlgorithm? GetAlgorithm(in int seed = 0x00000000)
     {
         if (!_algType.IsAssignableTo(typeof(Murmur3Base)))
         {
@@ -151,6 +157,6 @@ public abstract class Murmur3TestsBase
         System.Reflection.ConstructorInfo? constructor =
             _algType.GetConstructor([typeof(int).MakeByRefType()]);
 
-        return constructor?.Invoke([seed]) as HashAlgorithm;
+        return constructor?.Invoke([seed]) as NonCryptographicHashAlgorithm;
     }
 }

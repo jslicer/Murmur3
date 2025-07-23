@@ -10,7 +10,7 @@
 namespace Murmur3.Tests;
 
 using System.Diagnostics.CodeAnalysis;
-using System.Security.Cryptography;
+using System.IO.Hashing;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -34,55 +34,60 @@ public sealed class BogusHasherTests : Murmur3TestsBase
     /// Tests that when the hash algorithm is not a proper descendant of Murmur3 it throws the appropriate
     /// exception.
     /// </summary>
-    /// <returns>An asynchronous <see cref="Task" />.</returns>
     [TestMethod]
-    public async Task EnsureNonMurmur3HasherCaughtAsync() =>
-        await Assert.ThrowsExactlyAsync<InvalidOperationException>(async () =>
-            await TestSmHasherAsync("The quick brown fox jumps over the lazy dog").ConfigureAwait(false)).ConfigureAwait(true);
+    public void EnsureNonMurmur3HasherCaught() =>
+        Assert.ThrowsExactly<InvalidOperationException>(() =>
+            TestSmHasher("The quick brown fox jumps over the lazy dog"));
 
     /// <summary>
     /// A bogus hash class.
     /// </summary>
-    /// <seealso cref="HashAlgorithm" />
-    private sealed class BogusHasher : HashAlgorithm
+    /// <seealso cref="NonCryptographicHashAlgorithm" />
+    [method: ExcludeFromCodeCoverage]
+    private sealed class BogusHasher() : NonCryptographicHashAlgorithm(32)
     {
+        /// <inheritdoc />
+        /// <summary>
+        /// When overridden in a derived class, appends the contents of <paramref name="source" /> to the data already
+        /// processed for the current hash computation.
+        /// </summary>
+        /// <param name="source">The data to process.</param>
+        [ExcludeFromCodeCoverage]
+        public override void Append(ReadOnlySpan<byte> source)
+        {
+            // Intentionally empty.
+        }
+
         /// <inheritdoc />
         /// <summary>
         /// Resets the hash algorithm to its initial state.
         /// </summary>
         [ExcludeFromCodeCoverage]
-        public override void Initialize()
+        public override void Reset()
         {
             // Intentionally empty.
         }
 
         /// <inheritdoc />
         /// <summary>
-        /// When overridden in a derived class, routes data written to the object into the hash algorithm for computing
-        /// the hash.
+        ///   When overridden in a derived class,
+        ///   writes the computed hash value to <paramref name="destination" />
+        ///   without modifying accumulated state.
         /// </summary>
-        /// <param name="array">The input to compute the hash code for.</param>
-        /// <param name="ibStart">The offset into the byte array from which to begin using data.</param>
-        /// <param name="cbSize">The number of bytes in the byte array to use as data.</param>
-#pragma warning disable VSSpell001 // Spell Check
+        /// <param name="destination">The buffer that receives the computed hash value.</param>
+        /// <remarks>
+        ///   <para>
+        ///     Implementations of this method must write exactly
+        ///     <see cref="NonCryptographicHashAlgorithm.HashLengthInBytes" /> bytes to <paramref name="destination" />.
+        ///     Do not assume that the buffer was zero-initialized.
+        ///   </para>
+        ///   <para>
+        ///     The <see cref="NonCryptographicHashAlgorithm" /> class validates the
+        ///     size of the buffer before calling this method, and slices the span
+        ///     down to be exactly <see cref="NonCryptographicHashAlgorithm.HashLengthInBytes" /> in length.
+        ///   </para>
+        /// </remarks>
         [ExcludeFromCodeCoverage]
-        protected override void HashCore(byte[] array, int ibStart, int cbSize)
-#pragma warning restore VSSpell001 // Spell Check
-        {
-            // Intentionally empty.
-        }
-
-        /// <summary>
-        /// When overridden in a derived class, finalizes the hash computation after the last data is processed by the
-        /// cryptographic hash algorithm.
-        /// </summary>
-        /// <returns>
-        /// The computed hash code.
-        /// </returns>
-#pragma warning disable IDE0301 // Simplify collection initialization
-        [ExcludeFromCodeCoverage]
-        //// ReSharper disable once UseCollectionExpression
-        protected override byte[] HashFinal() => Array.Empty<byte>();
-#pragma warning restore IDE0301 // Simplify collection initialization
+        protected override void GetCurrentHashCore(Span<byte> destination) => destination.Clear();
     }
 }

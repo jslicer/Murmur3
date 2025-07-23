@@ -5,10 +5,10 @@ dotnet_diagnostic.SA1309.severity = none
 
 # Default severity for analyzer diagnostics with category 'StyleCop.CSharp.NamingRules'
 dotnet_analyzer_diagnostic.category-StyleCop.CSharp.NamingRules.severity = none
-csharp_using_directive_placement = outside_namespace:silent
+csharp_using_directive_placement = inside_namespace:silent
 csharp_prefer_simple_using_statement = true:suggestion
 csharp_prefer_braces = true:suggestion
-csharp_style_namespace_declarations = block_scoped:silent
+csharp_style_namespace_declarations = file_scoped:suggestion
 csharp_style_prefer_method_group_conversion = true:silent
 csharp_style_expression_bodied_methods = true:suggestion
 csharp_style_expression_bodied_constructors = true:suggestion

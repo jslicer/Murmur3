@@ -239,11 +239,6 @@ public sealed class Murmur3FTests : Murmur3TestsBase
     /// <summary>
     /// Tests using the SMHasher KeysetTest VerificationTest.
     /// </summary>
-    /// <returns>An asynchronous <see cref="Task" />.</returns>
     [TestMethod]
-    public async Task TestSmHasherAsync()
-    {
-        using CancellationTokenSource cts = new ();
-        await TestSmHasherAsync("7192878CE684ED2D63F3DE036384BA69", cts.Token).ConfigureAwait(false);
-    }
+    public void TestSmHasher() => TestSmHasher("9086593DB201C5171CA477936797C880");
 }

@@ -9,7 +9,10 @@ Murmur3.Murmur3C
 Murmur3.Murmur3C.Murmur3C(in int seed = 0) -> void
 Murmur3.Murmur3F
 Murmur3.Murmur3F.Murmur3F(in int seed = 0) -> void
-override Murmur3.Murmur3A.Initialize() -> void
-override Murmur3.Murmur3C.Initialize() -> void
-override Murmur3.Murmur3F.Initialize() -> void
+override Murmur3.Murmur3A.Append(System.ReadOnlySpan<byte> source) -> void
+override Murmur3.Murmur3A.Reset() -> void
+override Murmur3.Murmur3C.Append(System.ReadOnlySpan<byte> source) -> void
+override Murmur3.Murmur3C.Reset() -> void
+override Murmur3.Murmur3F.Append(System.ReadOnlySpan<byte> source) -> void
+override Murmur3.Murmur3F.Reset() -> void
 virtual Murmur3.Murmur3Base.Init() -> void
