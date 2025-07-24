@@ -16,11 +16,11 @@
         <RepositoryUrl>https://github.com/jslicer/Murmur3</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
         <PackageTags>murmur3;hash;function</PackageTags>
-        <Copyright>Copyright (c) Always Elucidated Solution Pioneers, LLC 2022</Copyright>
+        <Copyright>Copyright (c) Always Elucidated Solution Pioneers, LLC 2025</Copyright>
         <OutputType>Library</OutputType>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <AssemblyVersion>1.0.2.0</AssemblyVersion>
+        <AssemblyVersion>2.0.0.0</AssemblyVersion>
         <FileVersion>$(AssemblyVersion)</FileVersion>
         <Version>$(AssemblyVersion)</Version>
     </PropertyGroup>
