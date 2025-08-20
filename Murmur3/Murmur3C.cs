@@ -10,9 +10,9 @@
 namespace Murmur3;
 
 using System;
+using System.Buffers.Binary;
 using System.IO.Hashing;
 using System.Runtime.CompilerServices;
-
 using static System.BitConverter;
 
 /// <inheritdoc />
@@ -91,16 +91,13 @@ public sealed class Murmur3C : Murmur3Base
         const int BlockSizeInBytes = 16;
         int remainder = source.Length & (BlockSizeInBytes - 1);
         int alignedLength = source.Length - remainder;
-        byte[] array = source.ToArray();
 
         for (int i = 0; i < alignedLength; i += BlockSizeInBytes)
         {
-            uint k1 = ToUInt32(array, i);
-            //// ReSharper disable ComplexConditionExpression
-            uint k2 = ToUInt32(array, i + (BlockSizeInBytes / 4));
-            uint k3 = ToUInt32(array, i + (BlockSizeInBytes / 2));
-            uint k4 = ToUInt32(array, i + (3 * BlockSizeInBytes / 4));
-            //// ReSharper restore ComplexConditionExpression
+            uint k1 = BinaryPrimitives.ReadUInt32LittleEndian(source.Slice(i, 4));
+            uint k2 = BinaryPrimitives.ReadUInt32LittleEndian(source.Slice(i + 4, 4));
+            uint k3 = BinaryPrimitives.ReadUInt32LittleEndian(source.Slice(i + 8, 4));
+            uint k4 = BinaryPrimitives.ReadUInt32LittleEndian(source.Slice(i + 12, 4));
 
             _h1 ^= C2 * RotateLeft(C1 * k1, 15);
             _h1 = RotateLeft(_h1, 19);

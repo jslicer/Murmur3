@@ -11,9 +11,9 @@
 
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
 
-        <AssemblyVersion>2.0.0.0</AssemblyVersion>
+        <AssemblyVersion>2.0.0.1</AssemblyVersion>
 
-        <FileVersion>2.0.0.0</FileVersion>
+        <FileVersion>2.0.0.1</FileVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">

@@ -10,6 +10,7 @@
 namespace Murmur3;
 
 using System;
+using System.Buffers.Binary;
 using System.IO.Hashing;
 using System.Runtime.CompilerServices;
 
@@ -71,13 +72,11 @@ public sealed class Murmur3F : Murmur3Base
         const int BlockSizeInBytes = 16;
         int remainder = source.Length & (BlockSizeInBytes - 1);
         int alignedLength = source.Length - remainder;
-        byte[] array = source.ToArray();
 
         for (int i = 0; i < alignedLength; i += BlockSizeInBytes)
         {
-            ulong k1 = ToUInt64(array, i);
-            //// ReSharper disable once ComplexConditionExpression
-            ulong k2 = ToUInt64(array, i + (BlockSizeInBytes / 2));
+            ulong k1 = BinaryPrimitives.ReadUInt64LittleEndian(source.Slice(i, 8));
+            ulong k2 = BinaryPrimitives.ReadUInt64LittleEndian(source.Slice(i + 8, 8));
 
             _h1 ^= C2 * RotateLeft(C1 * k1, 31);
             _h1 = RotateLeft(_h1, 27);

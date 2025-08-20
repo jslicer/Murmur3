@@ -10,8 +10,10 @@
 namespace Murmur3;
 
 using System;
+using System.Buffers.Binary;
 using System.IO.Hashing;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 using static System.BitConverter;
 
@@ -65,11 +67,12 @@ public sealed class Murmur3A : Murmur3Base
         const int BlockSizeInBytes = 4;
         int remainder = source.Length & (BlockSizeInBytes - 1);
         int alignedLength = source.Length - remainder;
-        byte[] array = source.ToArray();
 
         for (int i = 0; i < alignedLength; i += BlockSizeInBytes)
         {
-            _h1 ^= C2 * RotateLeft(C1 * ToUInt32(array, i), 15);
+            uint k = BinaryPrimitives.ReadUInt32LittleEndian(source.Slice(i, BlockSizeInBytes));
+
+            _h1 ^= C2 * RotateLeft(C1 * k, 15);
             _h1 = (5 * RotateLeft(_h1, 13)) + 0xE6546B64;
         }
 
