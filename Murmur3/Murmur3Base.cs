@@ -10,6 +10,7 @@
 namespace Murmur3;
 
 using System.IO.Hashing;
+using System.Runtime.CompilerServices;
 
 /// <inheritdoc />
 /// <summary>
@@ -46,5 +47,6 @@ public abstract class Murmur3Base : NonCryptographicHashAlgorithm
     /// <summary>
     /// Initializes the hash for this instance.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     protected virtual void Init() => Length = 0;
 }

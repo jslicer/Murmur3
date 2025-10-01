@@ -55,6 +55,7 @@ public sealed class Murmur3F : Murmur3Base
     /// <summary>
     /// Initializes an implementation of the <see cref="Murmur3Base" /> class.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override void Reset() => Init();
 
     /// <inheritdoc />
@@ -111,6 +112,7 @@ public sealed class Murmur3F : Murmur3Base
     /// <summary>
     /// Initializes the hash for this instance.
     /// </summary>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     protected override void Init()
     {
         _h1 = Seed;
@@ -155,7 +157,7 @@ public sealed class Murmur3F : Murmur3Base
     /// <param name="x">The value to rotate.</param>
     /// <param name="r">The number of bits to rotate (maximum 64 bits).</param>
     /// <returns>The rotated value.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
     private static ulong RotateLeft(in ulong x, in byte r) => (x << r) | (x >> (64 - r));
 
     /// <summary>
@@ -163,7 +165,7 @@ public sealed class Murmur3F : Murmur3Base
     /// </summary>
     /// <param name="k">The value to mix.</param>
     /// <returns>The mixed value.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
     private static ulong FMix(in ulong k)
     {
         //// ReSharper disable ComplexConditionExpression
@@ -180,7 +182,7 @@ public sealed class Murmur3F : Murmur3Base
     /// <param name="tail">The read-only span of bytes being hashed.</param>
     /// <param name="position">The position in the read-only span of bytes where the tail starts.</param>
     /// <param name="remainder">The number of bytes remaining to process.</param>
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
     //// ReSharper disable once MethodTooLong
     //// ReSharper disable once CognitiveComplexity
     private void Tail(in ReadOnlySpan<byte> tail, in int position, in int remainder)
