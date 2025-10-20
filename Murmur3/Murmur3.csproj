@@ -20,7 +20,7 @@
         <OutputType>Library</OutputType>
         <PackageLicenseExpression>MIT</PackageLicenseExpression>
         <PackageReadmeFile>README.md</PackageReadmeFile>
-        <AssemblyVersion>2.0.0.2</AssemblyVersion>
+        <AssemblyVersion>2.0.0.3</AssemblyVersion>
         <FileVersion>$(AssemblyVersion)</FileVersion>
         <Version>$(AssemblyVersion)</Version>
     </PropertyGroup>
@@ -77,7 +77,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="System.IO.Hashing" Version="9.0.8" />
+        <PackageReference Include="System.IO.Hashing" Version="9.0.10" />
     </ItemGroup>
 
 </Project>

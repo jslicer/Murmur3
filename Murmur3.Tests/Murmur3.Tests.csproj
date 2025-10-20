@@ -11,9 +11,9 @@
 
         <GenerateDocumentationFile>True</GenerateDocumentationFile>
 
-        <AssemblyVersion>2.0.0.1</AssemblyVersion>
+        <AssemblyVersion>2.0.0.3</AssemblyVersion>
 
-        <FileVersion>2.0.0.1</FileVersion>
+        <FileVersion>2.0.0.3</FileVersion>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -49,9 +49,9 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.14.1" />
-        <PackageReference Include="MSTest.TestAdapter" Version="4.0.0-preview.25358.7" />
-        <PackageReference Include="MSTest.TestFramework" Version="4.0.0-preview.25358.7" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.0.0" />
+        <PackageReference Include="MSTest.TestAdapter" Version="4.0.1" />
+        <PackageReference Include="MSTest.TestFramework" Version="4.0.1" />
         <PackageReference Include="coverlet.collector" Version="6.0.4">
           <PrivateAssets>all</PrivateAssets>
           <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
@@ -68,7 +68,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="System.IO.Hashing" Version="9.0.8" />
+        <PackageReference Include="System.IO.Hashing" Version="9.0.10" />
     </ItemGroup>
 
     <ItemGroup>
