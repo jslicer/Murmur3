@@ -1,14 +1,14 @@
 ﻿Murmur3.Murmur3A
-Murmur3.Murmur3A.Murmur3A(in int seed = 0) -> void
+Murmur3.Murmur3A.Murmur3A(int seed = 0) -> void
 Murmur3.Murmur3Base
 Murmur3.Murmur3Base.Length.get -> int
 Murmur3.Murmur3Base.Length.set -> void
-Murmur3.Murmur3Base.Murmur3Base(in int hashSizeValue, in int seed = 0) -> void
+Murmur3.Murmur3Base.Murmur3Base(int hashSizeValue, int seed = 0) -> void
 Murmur3.Murmur3Base.Seed.get -> uint
 Murmur3.Murmur3C
-Murmur3.Murmur3C.Murmur3C(in int seed = 0) -> void
+Murmur3.Murmur3C.Murmur3C(int seed = 0) -> void
 Murmur3.Murmur3F
-Murmur3.Murmur3F.Murmur3F(in int seed = 0) -> void
+Murmur3.Murmur3F.Murmur3F(int seed = 0) -> void
 override Murmur3.Murmur3A.Append(System.ReadOnlySpan<byte> source) -> void
 override Murmur3.Murmur3A.Reset() -> void
 override Murmur3.Murmur3C.Append(System.ReadOnlySpan<byte> source) -> void

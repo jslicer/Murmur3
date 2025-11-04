@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-// Ignore Spelling: alg
+// Ignore Spelling: alg Hasher
 namespace Murmur3.Tests;
 
 using System.IO.Hashing;
@@ -40,7 +40,7 @@ public abstract class Murmur3TestsBase
     /// <param name="algType">Type of the Murmur3 hashing algorithm variant.</param>
     /// <exception cref="ArgumentNullException"><paramref name="algType" /> cannot be
     /// <see langword="null" />.</exception>
-    protected Murmur3TestsBase(in Type algType)
+    protected Murmur3TestsBase(Type algType)
     {
         ArgumentNullException.ThrowIfNull(algType);
         _algType = algType;
@@ -56,7 +56,7 @@ public abstract class Murmur3TestsBase
     // ReSharper disable once TooManyArguments
 #pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable RS0026 // Do not add multiple public overloads with optional parameters
-    protected void Test(in string expected, in byte[] input, in string message, in int seed = 0x00000000) =>
+    protected void Test(string expected, byte[] input, string message, int seed = 0x00000000) =>
 #pragma warning restore RS0026 // Do not add multiple public overloads with optional parameters
 #pragma warning restore IDE0079 // Remove unnecessary suppression
         AreEqual(Parse(expected, AllowHexSpecifier, InvariantCulture), Hash(input, seed), message);
@@ -71,7 +71,7 @@ public abstract class Murmur3TestsBase
     // ReSharper disable once TooManyArguments
 #pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable RS0026 // Do not add multiple public overloads with optional parameters
-    protected void Test(in string expected, in string input, in string message, in int seed = 0x00000000) =>
+    protected void Test(string expected, string input, string message, int seed = 0x00000000) =>
 #pragma warning restore RS0026 // Do not add multiple public overloads with optional parameters
 #pragma warning restore IDE0079 // Remove unnecessary suppression
         AreEqual(
@@ -108,14 +108,16 @@ public abstract class Murmur3TestsBase
             alg.Append(alg2.GetCurrentHash());
         }
 
-        if (alg.GetCurrentHash().SequenceEqual(_EmptyHash))
+        byte[] currentHash = alg.GetCurrentHash();
+
+        if (currentHash.SequenceEqual(_EmptyHash))
         {
             throw new InvalidOperationException("Hash invalid.");
         }
 
         AreEqual(
             Parse(expected, AllowHexSpecifier, InvariantCulture),
-            new(alg.GetCurrentHash()),
+            new(currentHash),
             "SMHasher hash verification");
     }
 
@@ -126,7 +128,7 @@ public abstract class Murmur3TestsBase
     /// <param name="seed">The seed value.</param>
     /// <returns>The result of applying the specified Murmur3 hashing algorithm variant to the input byte
     /// array.</returns>
-    private BigInteger Hash(in ReadOnlySpan<byte> input, in int seed = 0x00000000)
+    private BigInteger Hash(ReadOnlySpan<byte> input, int seed = 0x00000000)
     {
         NonCryptographicHashAlgorithm alg =
             GetAlgorithm(seed) ?? throw new InvalidOperationException("Hash algorithm constructor not found.");
@@ -147,7 +149,7 @@ public abstract class Murmur3TestsBase
     /// not be found.</returns>
     /// <exception cref="InvalidOperationException"><see cref="_algType" /> must be a descendant of
     /// Murmur3Base.</exception>
-    private NonCryptographicHashAlgorithm? GetAlgorithm(in int seed = 0x00000000)
+    private NonCryptographicHashAlgorithm? GetAlgorithm(int seed = 0x00000000)
     {
         if (!_algType.IsAssignableTo(typeof(Murmur3Base)))
         {
@@ -155,7 +157,7 @@ public abstract class Murmur3TestsBase
         }
 
         System.Reflection.ConstructorInfo? constructor =
-            _algType.GetConstructor([typeof(int).MakeByRefType()]);
+            _algType.GetConstructor([typeof(int)]);
 
         return constructor?.Invoke([seed]) as NonCryptographicHashAlgorithm;
     }

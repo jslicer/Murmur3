@@ -14,8 +14,6 @@ using System.Buffers.Binary;
 using System.IO.Hashing;
 using System.Runtime.CompilerServices;
 
-using static System.BitConverter;
-
 /// <inheritdoc />
 /// <summary>
 /// Implements the Murmur3 32 x86 hashing algorithm variant.
@@ -42,7 +40,7 @@ public sealed class Murmur3A : Murmur3Base
     /// Initializes a new instance of the <see cref="Murmur3A" /> class.
     /// </summary>
     /// <param name="seed">The seed value.</param>
-    public Murmur3A(in int seed = 0x00000000)
+    public Murmur3A(int seed = 0x00000000)
         : base(32, seed) =>
         Init();
 
@@ -80,8 +78,6 @@ public sealed class Murmur3A : Murmur3Base
         {
             Tail(source, alignedLength, remainder);
         }
-
-        _h1 = FMix(_h1 ^ (uint)Length);
     }
 
     /// <inheritdoc />
@@ -105,9 +101,9 @@ public sealed class Murmur3A : Murmur3Base
     /// </remarks>
     protected override void GetCurrentHashCore(Span<byte> destination)
     {
-        byte[] bytes = GetBytes(_h1);
+        uint h1 = FMix(_h1 ^ (uint)Length);
 
-        bytes.CopyTo(destination);
+        BinaryPrimitives.WriteUInt32LittleEndian(destination, h1);
     }
 
     /// <inheritdoc />
@@ -128,7 +124,7 @@ public sealed class Murmur3A : Murmur3Base
     /// <param name="r">The number of bits to rotate (maximum 32 bits).</param>
     /// <returns>The rotated value.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-    private static uint RotateLeft(in uint x, in byte r) => (x << r) | (x >> (32 - r));
+    private static uint RotateLeft(uint x, byte r) => (x << r) | (x >> (32 - r));
 
     /// <summary>
     /// Finalization mix - force all bits of a hash block to avalanche.
@@ -136,7 +132,7 @@ public sealed class Murmur3A : Murmur3Base
     /// <param name="k">The value to mix.</param>
     /// <returns>The mixed value.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-    private static uint FMix(in uint k)
+    private static uint FMix(uint k)
     {
         //// ReSharper disable ComplexConditionExpression
         uint k1 = 0x85EBCA6BU * (k ^ (k >> 16));
@@ -153,7 +149,7 @@ public sealed class Murmur3A : Murmur3Base
     /// <param name="position">The position in the read-only span of bytes where the tail starts.</param>
     /// <param name="remainder">The number of bytes remaining to process.</param>
     [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-    private void Tail(in ReadOnlySpan<byte> tail, in int position, in int remainder)
+    private void Tail(ReadOnlySpan<byte> tail, int position, int remainder)
     {
         uint k1 = 0x00000000U;
 

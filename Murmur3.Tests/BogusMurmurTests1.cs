@@ -49,7 +49,7 @@ public sealed class BogusMurmurTests1 : Murmur3TestsBase
     /// <param name="seed">The seed value.</param>
 #pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable SA1009 // Closing parenthesis should be spaced correctly
-    private sealed class BogusMurmurHasher1(in int seed = 0) : Murmur3Base(32, in seed)
+    private sealed class BogusMurmurHasher1(int seed = 0) : Murmur3Base(32, seed)
 #pragma warning restore SA1009 // Closing parenthesis should be spaced correctly
 #pragma warning restore IDE0079 // Remove unnecessary suppression
     {

@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-// Ignore Spelling: Lorem Ipsum
+// Ignore Spelling: Lorem Ipsum Hasher
 namespace Murmur3.Tests;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -18,6 +18,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 /// <seealso cref="Murmur3TestsBase" />
 [TestClass]
 //// ReSharper disable once ClassTooBig
+//// ReSharper disable once UnusedType.Global
 public sealed class Murmur3FTests : Murmur3TestsBase
 {
     /// <summary>
@@ -33,6 +34,7 @@ public sealed class Murmur3FTests : Murmur3TestsBase
     /// Tests an empty <see langword="byte" /> array with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
+    //// ReSharper disable once UnusedMember.Global
     public void TestEmptyInputSeed0() => Test(
         "00000000000000000000000000000000",
         [],
@@ -45,6 +47,7 @@ public sealed class Murmur3FTests : Murmur3TestsBase
     /// </summary>
     [TestMethod]
     //// ReSharper disable IdentifierTypo
+    //// ReSharper disable once UnusedMember.Global
     public void TestLoremIpsumInputSeed0() => Test(
         //// ReSharper restore IdentifierTypo
 #pragma warning disable IDE0079 // Remove unnecessary suppression
@@ -62,6 +65,7 @@ public sealed class Murmur3FTests : Murmur3TestsBase
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
+    //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxInputSeed0() => Test(
         "7A433CA9C49A9347E34BBC7BBC071B6C",
         "The quick brown fox jumps over the lazy dog",
@@ -71,6 +75,7 @@ public sealed class Murmur3FTests : Murmur3TestsBase
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
+    //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxPeriodInputSeed0() => Test(
         "695DA1A38987B6E7CD99481F9EE902C9",
         "The quick brown fox jumps over the lazy dog.",
@@ -80,6 +85,7 @@ public sealed class Murmur3FTests : Murmur3TestsBase
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
+    //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxTwoPeriodsInputSeed0() => Test(
         "C223E9BAA9E88CBE5E157F5CF160B380",
         "The quick brown fox jumps over the lazy dog..",
@@ -89,6 +95,7 @@ public sealed class Murmur3FTests : Murmur3TestsBase
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
+    //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxThreePeriodsInputSeed0() => Test(
         "5298F65A5EB449336587A20B11FCCB07",
         "The quick brown fox jumps over the lazy dog...",
@@ -98,6 +105,7 @@ public sealed class Murmur3FTests : Murmur3TestsBase
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
+    //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxFourPeriodsInputSeed0() => Test(
         "28DDB16FB6A6B6B2EC01139A7A722680",
         "The quick brown fox jumps over the lazy dog....",
@@ -107,6 +115,7 @@ public sealed class Murmur3FTests : Murmur3TestsBase
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
+    //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxFivePeriodsInputSeed0() => Test(
         "08CA8F73395928ACBAE6A92A3DF6B312",
         "The quick brown fox jumps over the lazy dog.....",
@@ -116,6 +125,7 @@ public sealed class Murmur3FTests : Murmur3TestsBase
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
+    //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxSixPeriodsInputSeed0() => Test(
         "933A71892F0F32F58C4614ADD7E407EA",
         "The quick brown fox jumps over the lazy dog......",
@@ -125,6 +135,7 @@ public sealed class Murmur3FTests : Murmur3TestsBase
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
+    //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxSevenPeriodsInputSeed0() => Test(
         "E84E129A47F01AF21B89D9B92E931A40",
         "The quick brown fox jumps over the lazy dog.......",
@@ -134,6 +145,7 @@ public sealed class Murmur3FTests : Murmur3TestsBase
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
+    //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxEightPeriodsInputSeed0() => Test(
         "E72D267D8A24E3AE4399239217BD6C2F",
         "The quick brown fox jumps over the lazy dog........",
@@ -143,6 +155,7 @@ public sealed class Murmur3FTests : Murmur3TestsBase
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
+    //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxNinePeriodsInputSeed0() => Test(
         "0D52349174C183AF24E0C47644D2F488",
         "The quick brown fox jumps over the lazy dog.........",
@@ -152,6 +165,7 @@ public sealed class Murmur3FTests : Murmur3TestsBase
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
+    //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxTenPeriodsInputSeed0() => Test(
         "47A02D677C2E06615C9FB5CC1F62B44D",
         "The quick brown fox jumps over the lazy dog..........",
@@ -161,6 +175,7 @@ public sealed class Murmur3FTests : Murmur3TestsBase
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
+    //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxElevenPeriodsInputSeed0() => Test(
         "B9B9C05FD54992B290904D16DDA6E4C1",
         "The quick brown fox jumps over the lazy dog...........",
@@ -170,6 +185,7 @@ public sealed class Murmur3FTests : Murmur3TestsBase
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
+    //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxTwelvePeriodsInputSeed0() => Test(
         "8CDF9B1300705FB773AFFBBA72F9A33E",
         "The quick brown fox jumps over the lazy dog............",
@@ -179,6 +195,7 @@ public sealed class Murmur3FTests : Murmur3TestsBase
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
+    //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxThirteenPeriodsInputSeed0() => Test(
         "8EFCCC016B0FB773A7B7F7B28562C5ED",
         "The quick brown fox jumps over the lazy dog.............",
@@ -188,6 +205,7 @@ public sealed class Murmur3FTests : Murmur3TestsBase
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
+    //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxFourteenPeriodsInputSeed0() => Test(
         "ED38223BD3583EE31AA17B12FEC33C6C",
         "The quick brown fox jumps over the lazy dog..............",
@@ -197,6 +215,7 @@ public sealed class Murmur3FTests : Murmur3TestsBase
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
+    //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxFifteenPeriodsInputSeed0() => Test(
         "6A9C394DCFBD278BDA4103A8B6E46FEF",
         "The quick brown fox jumps over the lazy dog...............",
@@ -207,6 +226,7 @@ public sealed class Murmur3FTests : Murmur3TestsBase
     /// </summary>
     [TestMethod]
     //// ReSharper disable InconsistentNaming
+    //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxInputSeed9747b28c() => Test(
         //// ReSharper restore InconsistentNaming
 #pragma warning disable IDE0079 // Remove unnecessary suppression
@@ -224,6 +244,7 @@ public sealed class Murmur3FTests : Murmur3TestsBase
     /// </summary>
     [TestMethod]
     //// ReSharper disable InconsistentNaming
+    //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxInputSeedC58f1a7b() => Test(
         //// ReSharper restore InconsistentNaming
 #pragma warning disable IDE0079 // Remove unnecessary suppression
@@ -240,5 +261,6 @@ public sealed class Murmur3FTests : Murmur3TestsBase
     /// Tests using the SMHasher KeysetTest VerificationTest.
     /// </summary>
     [TestMethod]
-    public void TestSmHasher() => TestSmHasher("9086593DB201C5171CA477936797C880");
+    //// ReSharper disable once UnusedMember.Global
+    public void TestSmHasher() => TestSmHasher("7192878CE684ED2D63F3DE036384BA69");
 }

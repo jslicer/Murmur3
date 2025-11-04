@@ -7,7 +7,7 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-// Ignore Spelling: Lorem Ipsum
+// Ignore Spelling: Lorem Ipsum Hasher
 namespace Murmur3.Tests;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -17,6 +17,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 /// </summary>
 /// <seealso cref="Murmur3TestsBase" />
 [TestClass]
+//// ReSharper disable once UnusedType.Global
 public sealed class Murmur3ATests : Murmur3TestsBase
 {
     /// <summary>
@@ -32,6 +33,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// Tests an empty <see langword="byte" /> array with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
+    //// ReSharper disable once UnusedMember.Global
     public void TestEmptyInputSeed0() => Test(
         "00000000",
         [],
@@ -41,6 +43,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// Tests an empty <see langword="byte" /> array with an input seed of 0x00000001.
     /// </summary>
     [TestMethod]
+    //// ReSharper disable once UnusedMember.Global
     public void TestEmptyInputSeed1() =>
 #pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable SA1010 // Opening square brackets should be spaced correctly
@@ -55,6 +58,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     [TestMethod]
     //// ReSharper disable once InconsistentNaming
     //// ReSharper disable IdentifierTypo
+    //// ReSharper disable once UnusedMember.Global
     public void TestEmptyInputSeedFFFFFFFF() => Test(
     //// ReSharper restore IdentifierTypo
 #pragma warning disable IDE0079 // Remove unnecessary suppression
@@ -74,6 +78,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     [TestMethod]
     //// ReSharper disable once InconsistentNaming
     //// ReSharper disable IdentifierTypo
+    //// ReSharper disable once UnusedMember.Global
     public void TestFFFFFFFFInputSeed0() => Test(
     //// ReSharper restore IdentifierTypo
 #pragma warning disable IDE0079 // Remove unnecessary suppression
@@ -90,6 +95,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// Tests an array with bytes 0x87654321 with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
+    //// ReSharper disable once UnusedMember.Global
     public void Test21436587InputSeed0() => Test(
         "F55B516B",
         //// ReSharper disable once StyleCop.SA1502
@@ -103,6 +109,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     [TestMethod]
     //// ReSharper disable once InconsistentNaming
     //// ReSharper disable IdentifierTypo
+    //// ReSharper disable once UnusedMember.Global
     public void Test21436587InputSeed5082EDEE() => Test(
     //// ReSharper restore IdentifierTypo
 #pragma warning disable IDE0079 // Remove unnecessary suppression
@@ -120,6 +127,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// Tests an array with bytes 0x654321 with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
+    //// ReSharper disable once UnusedMember.Global
     public void Test214365InputSeed0() => Test(
         "7E4A8634",
         //// ReSharper disable once StyleCop.SA1502
@@ -130,6 +138,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// Tests an array with bytes 0x4321 with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
+    //// ReSharper disable once UnusedMember.Global
     public void Test2143InputSeed0() => Test(
         "A0F7B07A",
         //// ReSharper disable once StyleCop.SA1502
@@ -140,6 +149,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// Tests an array with <see langword="byte" /> 0x21 with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
+    //// ReSharper disable once UnusedMember.Global
     public void Test21InputSeed0() =>
         //// ReSharper disable once StyleCop.SA1502
         Test("72661CF4", "!"u8.ToArray(), "Only one byte. Should end up as 0x21");
@@ -148,6 +158,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// Tests an array with <see langword="byte" />s 0x00000000 with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
+    //// ReSharper disable once UnusedMember.Global
     public void Test00000000InputSeed0() =>
         Test("2362F9DE", new byte[4], "Make sure compiler doesn't see zero and convert to null");
 
@@ -155,6 +166,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// Tests an array with <see langword="byte" />s 0x000000 with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
+    //// ReSharper disable once UnusedMember.Global
     public void Test000000InputSeed0() =>
         Test("85F0B427", new byte[3], "Make sure compiler doesn't see zero and convert to null");
 
@@ -162,6 +174,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// Tests an array with <see langword="byte" />s 0x0000 with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
+    //// ReSharper disable once UnusedMember.Global
     public void Test0000InputSeed0() =>
         Test("30F4C306", new byte[2], "Make sure compiler doesn't see zero and convert to null");
 
@@ -169,6 +182,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// Tests an array with <see langword="byte" />s 0x00 with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
+    //// ReSharper disable once UnusedMember.Global
     public void Test00InputSeed0() =>
         Test("514E28B7", new byte[1], "Make sure compiler doesn't see zero and convert to null");
 
@@ -179,6 +193,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// </summary>
     [TestMethod]
     //// ReSharper disable IdentifierTypo
+    //// ReSharper disable once UnusedMember.Global
     public void TestLoremIpsumInputSeed0() => Test(
     //// ReSharper restore IdentifierTypo
 #pragma warning disable IDE0079 // Remove unnecessary suppression
@@ -196,6 +211,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
     [TestMethod]
+    //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxInputSeed0() => Test(
         "2E4FF723",
         "The quick brown fox jumps over the lazy dog",
@@ -206,6 +222,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// </summary>
     [TestMethod]
     //// ReSharper disable InconsistentNaming
+    //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxInputSeed9747b28c() => Test(
     //// ReSharper restore InconsistentNaming
 #pragma warning disable IDE0079 // Remove unnecessary suppression
@@ -223,6 +240,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// </summary>
     [TestMethod]
     //// ReSharper disable InconsistentNaming
+    //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxInputSeedC58f1a7b() => Test(
     //// ReSharper restore InconsistentNaming
 #pragma warning disable IDE0079 // Remove unnecessary suppression
@@ -239,5 +257,6 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// Tests using the SMHasher KeysetTest VerificationTest.
     /// </summary>
     [TestMethod]
-    public void TestSmHasher() => TestSmHasher("5A8D393");
+    //// ReSharper disable once UnusedMember.Global
+    public void TestSmHasher() => TestSmHasher("B0F57EE3");
 }

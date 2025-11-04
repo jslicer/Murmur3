@@ -14,8 +14,6 @@ using System.Buffers.Binary;
 using System.IO.Hashing;
 using System.Runtime.CompilerServices;
 
-using static System.BitConverter;
-
 /// <inheritdoc />
 /// <summary>
 /// Implements the Murmur3 128 x86 hashing algorithm variant.
@@ -67,7 +65,7 @@ public sealed class Murmur3C : Murmur3Base
     /// Initializes a new instance of the <see cref="Murmur3C" /> class.
     /// </summary>
     /// <param name="seed">The seed value.</param>
-    public Murmur3C(in int seed = 0x00000000)
+    public Murmur3C(int seed = 0x00000000)
         : base(128, seed) =>
         Init();
 
@@ -126,32 +124,6 @@ public sealed class Murmur3C : Murmur3Base
         {
             Tail(source, alignedLength, remainder);
         }
-
-        _h1 ^= (uint)Length;
-        _h2 ^= (uint)Length;
-        _h3 ^= (uint)Length;
-        _h4 ^= (uint)Length;
-
-        _h1 += _h2;
-        _h1 += _h3;
-        _h1 += _h4;
-
-        _h2 += _h1;
-        _h3 += _h1;
-        _h4 += _h1;
-
-        _h1 = FMix(_h1);
-        _h2 = FMix(_h2);
-        _h3 = FMix(_h3);
-        _h4 = FMix(_h4);
-
-        _h1 += _h2;
-        _h1 += _h3;
-        _h1 += _h4;
-
-        _h2 += _h1;
-        _h3 += _h1;
-        _h4 += _h1;
     }
 
     /// <inheritdoc />
@@ -190,18 +162,41 @@ public sealed class Murmur3C : Murmur3Base
     // ReSharper disable once MethodTooLong
     protected override void GetCurrentHashCore(Span<byte> destination)
     {
-        byte[] b1 = GetBytes(_h1);
-        byte[] b2 = GetBytes(_h2);
-        byte[] b3 = GetBytes(_h3);
-        byte[] b4 = GetBytes(_h4);
-        //// ReSharper disable once ComplexConditionExpression
-        byte[] bytes = new byte[b1.Length + b2.Length + b3.Length + b4.Length];
+        uint h1 = _h1;
+        uint h2 = _h2;
+        uint h3 = _h3;
+        uint h4 = _h4;
 
-        b1.CopyTo(bytes, 0);
-        b2.CopyTo(bytes, b1.Length);
-        b3.CopyTo(bytes, b1.Length + b2.Length);
-        b4.CopyTo(bytes, b1.Length + b2.Length + b3.Length);
-        bytes.CopyTo(destination);
+        h1 ^= (uint)Length;
+        h2 ^= (uint)Length;
+        h3 ^= (uint)Length;
+        h4 ^= (uint)Length;
+
+        h1 += h2;
+        h1 += h3;
+        h1 += h4;
+
+        h2 += h1;
+        h3 += h1;
+        h4 += h1;
+
+        h1 = FMix(h1);
+        h2 = FMix(h2);
+        h3 = FMix(h3);
+        h4 = FMix(h4);
+
+        h1 += h2;
+        h1 += h3;
+        h1 += h4;
+
+        h2 += h1;
+        h3 += h1;
+        h4 += h1;
+
+        BinaryPrimitives.WriteUInt32LittleEndian(destination.Slice(0, 4), h1);
+        BinaryPrimitives.WriteUInt32LittleEndian(destination.Slice(4, 4), h2);
+        BinaryPrimitives.WriteUInt32LittleEndian(destination.Slice(8, 4), h3);
+        BinaryPrimitives.WriteUInt32LittleEndian(destination.Slice(12, 4), h4);
     }
 
     /// <summary>
@@ -211,7 +206,7 @@ public sealed class Murmur3C : Murmur3Base
     /// <param name="r">The number of bits to rotate (maximum 32 bits).</param>
     /// <returns>The rotated value.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-    private static uint RotateLeft(in uint x, in byte r) => (x << r) | (x >> (32 - r));
+    private static uint RotateLeft(uint x, byte r) => (x << r) | (x >> (32 - r));
 
     /// <summary>
     /// Finalization mix - force all bits of a hash block to avalanche.
@@ -219,7 +214,7 @@ public sealed class Murmur3C : Murmur3Base
     /// <param name="k">The value to mix.</param>
     /// <returns>The mixed value.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-    private static uint FMix(in uint k)
+    private static uint FMix(uint k)
     {
         //// ReSharper disable ComplexConditionExpression
         uint k1 = 0x85EBCA6BU * (k ^ (k >> 16));
@@ -238,7 +233,7 @@ public sealed class Murmur3C : Murmur3Base
     [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
     //// ReSharper disable once MethodTooLong
     //// ReSharper disable once CognitiveComplexity
-    private void Tail(in ReadOnlySpan<byte> tail, in int position, in int remainder)
+    private void Tail(ReadOnlySpan<byte> tail, int position, int remainder)
     {
         uint k1 = 0x00000000U;
         uint k2 = 0x00000000U;

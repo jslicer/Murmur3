@@ -63,6 +63,7 @@ public class Benchmark
     [Benchmark]
     public byte[] Murmur3A()
     {
+        _murmur3A.Reset();
         _murmur3A.Append(_data);
         return _murmur3A.GetCurrentHash();
     }
@@ -74,6 +75,7 @@ public class Benchmark
     [Benchmark]
     public byte[] Murmur3C()
     {
+        _murmur3C.Reset();
         _murmur3C.Append(_data);
         return _murmur3C.GetCurrentHash();
     }
@@ -85,6 +87,7 @@ public class Benchmark
     [Benchmark]
     public byte[] Murmur3F()
     {
+        _murmur3F.Reset();
         _murmur3F.Append(_data);
         return _murmur3F.GetCurrentHash();
     }

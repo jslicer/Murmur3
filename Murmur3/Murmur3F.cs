@@ -14,8 +14,6 @@ using System.Buffers.Binary;
 using System.IO.Hashing;
 using System.Runtime.CompilerServices;
 
-using static System.BitConverter;
-
 /// <inheritdoc />
 /// <summary>
 /// Implements the Murmur3 128 x64 hashing algorithm variant.
@@ -47,7 +45,7 @@ public sealed class Murmur3F : Murmur3Base
     /// Initializes a new instance of the <see cref="Murmur3F" /> class.
     /// </summary>
     /// <param name="seed">The seed value.</param>
-    public Murmur3F(in int seed = 0x00000000)
+    public Murmur3F(int seed = 0x00000000)
         : base(128, seed) =>
         Init();
 
@@ -94,18 +92,6 @@ public sealed class Murmur3F : Murmur3Base
         {
             Tail(source, alignedLength, remainder);
         }
-
-        _h1 ^= (ulong)Length;
-        _h2 ^= (ulong)Length;
-
-        _h1 += _h2;
-        _h2 += _h1;
-
-        _h1 = FMix(_h1);
-        _h2 = FMix(_h2);
-
-        _h1 += _h2;
-        _h2 += _h1;
     }
 
     /// <inheritdoc />
@@ -139,16 +125,25 @@ public sealed class Murmur3F : Murmur3Base
     ///     down to be exactly <see cref="NonCryptographicHashAlgorithm.HashLengthInBytes" /> in length.
     ///   </para>
     /// </remarks>
-    // ReSharper disable once MethodTooLong
     protected override void GetCurrentHashCore(Span<byte> destination)
     {
-        byte[] b1 = GetBytes(_h1);
-        byte[] b2 = GetBytes(_h2);
-        byte[] bytes = new byte[b1.Length + b2.Length];
+        ulong h1 = _h1;
+        ulong h2 = _h2;
 
-        b1.CopyTo(bytes, 0);
-        b2.CopyTo(bytes, b1.Length);
-        bytes.CopyTo(destination);
+        h1 ^= (ulong)Length;
+        h2 ^= (ulong)Length;
+
+        h1 += h2;
+        h2 += h1;
+
+        h1 = FMix(h1);
+        h2 = FMix(h2);
+
+        h1 += h2;
+        h2 += h1;
+
+        BinaryPrimitives.WriteUInt64LittleEndian(destination.Slice(0, 8), h1);
+        BinaryPrimitives.WriteUInt64LittleEndian(destination.Slice(8, 8), h2);
     }
 
     /// <summary>
@@ -158,7 +153,7 @@ public sealed class Murmur3F : Murmur3Base
     /// <param name="r">The number of bits to rotate (maximum 64 bits).</param>
     /// <returns>The rotated value.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-    private static ulong RotateLeft(in ulong x, in byte r) => (x << r) | (x >> (64 - r));
+    private static ulong RotateLeft(ulong x, byte r) => (x << r) | (x >> (64 - r));
 
     /// <summary>
     /// Finalization mix - force all bits of a hash block to avalanche.
@@ -166,7 +161,7 @@ public sealed class Murmur3F : Murmur3Base
     /// <param name="k">The value to mix.</param>
     /// <returns>The mixed value.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
-    private static ulong FMix(in ulong k)
+    private static ulong FMix(ulong k)
     {
         //// ReSharper disable ComplexConditionExpression
         ulong k1 = 0xFF51AFD7ED558CCDUL * (k ^ (k >> 33));
@@ -185,7 +180,7 @@ public sealed class Murmur3F : Murmur3Base
     [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
     //// ReSharper disable once MethodTooLong
     //// ReSharper disable once CognitiveComplexity
-    private void Tail(in ReadOnlySpan<byte> tail, in int position, in int remainder)
+    private void Tail(ReadOnlySpan<byte> tail, int position, int remainder)
     {
         ulong k1 = 0x0000000000000000UL;
         ulong k2 = 0x0000000000000000UL;
