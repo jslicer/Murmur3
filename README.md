@@ -30,3 +30,9 @@ namespace Murmur3Test
 ```
 
 This will output BDD2AE7116C85A45 as the Murmur3 128-bit x64 hash of the string "foobar".
+
+## Benchmark Results
+
+<!-- BENCHMARK_RESULTS_START -->
+_No benchmark results yet. They will be updated automatically by GitHub Actions._
+<!-- BENCHMARK_RESULTS_END -->

@@ -17,6 +17,7 @@ using BenchmarkDotNet.Attributes;
 /// Benchmark the Murmur3 32 x86, Murmur3 128 x86, and Murmur3 128 x64 hashing algorithm variants.
 /// </summary>
 #pragma warning disable CA1515 // Consider making public types internal
+[Config(typeof(BenchmarkConfig))]
 public class Benchmark
 #pragma warning restore CA1515 // Consider making public types internal
 {
