@@ -3,3 +3,5 @@ Murmur3.Benchmarks.Benchmark.Benchmark() -> void
 Murmur3.Benchmarks.Benchmark.Murmur3A() -> byte[]!
 Murmur3.Benchmarks.Benchmark.Murmur3C() -> byte[]!
 Murmur3.Benchmarks.Benchmark.Murmur3F() -> byte[]!
+Murmur3.Benchmarks.BenchmarkConfig
+Murmur3.Benchmarks.BenchmarkConfig.BenchmarkConfig() -> void
