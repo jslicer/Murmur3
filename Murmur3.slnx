@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path="Directory.Build.props" />
+    <File Path="LICENSE.md" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="Murmur3.Benchmarks/Murmur3.Benchmarks.csproj" />
+  <Project Path="Murmur3.Tests/Murmur3.Tests.csproj" />
+  <Project Path="Murmur3/Murmur3.csproj" />
+</Solution>
