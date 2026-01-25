@@ -21,6 +21,12 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 public sealed class Murmur3ATests : Murmur3TestsBase
 {
     /// <summary>
+    /// The make sure compiler doesn't see zero and convert to null.
+    /// </summary>
+    private const string MakeSureCompilerDoesntSeeZeroAndConvertToNull =
+        "Make sure compiler doesn't see zero and convert to null";
+
+    /// <summary>
     /// Initializes a new instance of the <see cref="Murmur3ATests" /> class.
     /// </summary>
     public Murmur3ATests()
@@ -160,7 +166,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     [TestMethod]
     //// ReSharper disable once UnusedMember.Global
     public void Test00000000InputSeed0() =>
-        Test("2362F9DE", new byte[4], "Make sure compiler doesn't see zero and convert to null");
+        Test("2362F9DE", new byte[4], MakeSureCompilerDoesntSeeZeroAndConvertToNull);
 
     /// <summary>
     /// Tests an array with <see langword="byte" />s 0x000000 with an input seed of 0x00000000.
@@ -168,7 +174,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     [TestMethod]
     //// ReSharper disable once UnusedMember.Global
     public void Test000000InputSeed0() =>
-        Test("85F0B427", new byte[3], "Make sure compiler doesn't see zero and convert to null");
+        Test("85F0B427", new byte[3], MakeSureCompilerDoesntSeeZeroAndConvertToNull);
 
     /// <summary>
     /// Tests an array with <see langword="byte" />s 0x0000 with an input seed of 0x00000000.
@@ -176,7 +182,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     [TestMethod]
     //// ReSharper disable once UnusedMember.Global
     public void Test0000InputSeed0() =>
-        Test("30F4C306", new byte[2], "Make sure compiler doesn't see zero and convert to null");
+        Test("30F4C306", new byte[2], MakeSureCompilerDoesntSeeZeroAndConvertToNull);
 
     /// <summary>
     /// Tests an array with <see langword="byte" />s 0x00 with an input seed of 0x00000000.
@@ -184,7 +190,7 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     [TestMethod]
     //// ReSharper disable once UnusedMember.Global
     public void Test00InputSeed0() =>
-        Test("514E28B7", new byte[1], "Make sure compiler doesn't see zero and convert to null");
+        Test("514E28B7", new byte[1], MakeSureCompilerDoesntSeeZeroAndConvertToNull);
 
     /// <summary>
     /// ReSharper disable CommentTypo

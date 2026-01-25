@@ -142,7 +142,7 @@ public sealed class Murmur3F : Murmur3Base
         h1 += h2;
         h2 += h1;
 
-        BinaryPrimitives.WriteUInt64LittleEndian(destination.Slice(0, 8), h1);
+        BinaryPrimitives.WriteUInt64LittleEndian(destination[..8], h1);
         BinaryPrimitives.WriteUInt64LittleEndian(destination.Slice(8, 8), h2);
     }
 
