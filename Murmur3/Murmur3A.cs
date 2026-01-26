@@ -13,6 +13,7 @@ using System;
 using System.Buffers.Binary;
 using System.IO.Hashing;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 /// <inheritdoc />
 /// <summary>
@@ -66,9 +67,10 @@ public sealed class Murmur3A : Murmur3Base
         int remainder = source.Length & (BlockSizeInBytes - 1);
         int alignedLength = source.Length - remainder;
 
-        for (int i = 0; i < alignedLength; i += BlockSizeInBytes)
+        ReadOnlySpan<uint> blocks = MemoryMarshal.Cast<byte, uint>(source[..alignedLength]);
+        for (int i = 0; i < blocks.Length; i++)
         {
-            uint k = BinaryPrimitives.ReadUInt32LittleEndian(source.Slice(i, BlockSizeInBytes));
+            uint k = blocks[i];
 
             _h1 ^= C2 * RotateLeft(C1 * k, 15);
             _h1 = (5 * RotateLeft(_h1, 13)) + 0xE6546B64;
@@ -151,25 +153,16 @@ public sealed class Murmur3A : Murmur3Base
     [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
     private void Tail(ReadOnlySpan<byte> tail, int position, int remainder)
     {
-        uint k1 = 0x00000000U;
-
-        switch (remainder)
+        if (remainder == 0)
         {
-            case 3:
-                k1 ^= (uint)tail[position + 2] << 16;
-                k1 ^= (uint)tail[position + 1] << 8;
-                k1 ^= tail[position];
-                _h1 ^= C2 * RotateLeft(C1 * k1, 15);
-                break;
-            case 2:
-                k1 ^= (uint)tail[position + 1] << 8;
-                k1 ^= tail[position];
-                _h1 ^= C2 * RotateLeft(C1 * k1, 15);
-                break;
-            case 1:
-                k1 ^= tail[position];
-                _h1 ^= C2 * RotateLeft(C1 * k1, 15);
-                break;
+            return;
         }
+
+        Span<byte> buffer = stackalloc byte[4];
+        buffer.Clear();
+        tail.Slice(position, remainder).CopyTo(buffer);
+
+        uint k1 = MemoryMarshal.Read<uint>(buffer);
+        _h1 ^= C2 * RotateLeft(C1 * k1, 15);
     }
 }

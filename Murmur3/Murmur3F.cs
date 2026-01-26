@@ -13,6 +13,7 @@ using System;
 using System.Buffers.Binary;
 using System.IO.Hashing;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 
 /// <inheritdoc />
 /// <summary>
@@ -72,10 +73,11 @@ public sealed class Murmur3F : Murmur3Base
         int remainder = source.Length & (BlockSizeInBytes - 1);
         int alignedLength = source.Length - remainder;
 
-        for (int i = 0; i < alignedLength; i += BlockSizeInBytes)
+        ReadOnlySpan<ulong> blocks = MemoryMarshal.Cast<byte, ulong>(source[..alignedLength]);
+        for (int i = 0; i < blocks.Length; i += 2)
         {
-            ulong k1 = BinaryPrimitives.ReadUInt64LittleEndian(source.Slice(i, 8));
-            ulong k2 = BinaryPrimitives.ReadUInt64LittleEndian(source.Slice(i + 8, 8));
+            ulong k1 = blocks[i];
+            ulong k2 = blocks[i + 1];
 
             _h1 ^= C2 * RotateLeft(C1 * k1, 31);
             _h1 = RotateLeft(_h1, 27);
@@ -142,8 +144,9 @@ public sealed class Murmur3F : Murmur3Base
         h1 += h2;
         h2 += h1;
 
-        BinaryPrimitives.WriteUInt64LittleEndian(destination[..8], h1);
-        BinaryPrimitives.WriteUInt64LittleEndian(destination.Slice(8, 8), h2);
+        Span<ulong> writer = MemoryMarshal.Cast<byte, ulong>(destination);
+        writer[0] = h1;
+        writer[1] = h2;
     }
 
     /// <summary>
@@ -182,183 +185,23 @@ public sealed class Murmur3F : Murmur3Base
     //// ReSharper disable once CognitiveComplexity
     private void Tail(ReadOnlySpan<byte> tail, int position, int remainder)
     {
-        ulong k1 = 0x0000000000000000UL;
-        ulong k2 = 0x0000000000000000UL;
-
-        switch (remainder)
+        if (remainder == 0)
         {
-            case 15:
-                k2 ^= (ulong)tail[position + 14] << 48;
-                k2 ^= (ulong)tail[position + 13] << 40;
-                k2 ^= (ulong)tail[position + 12] << 32;
-                k2 ^= (ulong)tail[position + 11] << 24;
-                k2 ^= (ulong)tail[position + 10] << 16;
-                k2 ^= (ulong)tail[position + 9] << 8;
-                k2 ^= tail[position + 8];
-                _h2 ^= C1 * RotateLeft(C2 * k2, 33);
-                k1 ^= (ulong)tail[position + 7] << 56;
-                k1 ^= (ulong)tail[position + 6] << 48;
-                k1 ^= (ulong)tail[position + 5] << 40;
-                k1 ^= (ulong)tail[position + 4] << 32;
-                k1 ^= (ulong)tail[position + 3] << 24;
-                k1 ^= (ulong)tail[position + 2] << 16;
-                k1 ^= (ulong)tail[position + 1] << 8;
-                k1 ^= tail[position];
-                _h1 ^= C2 * RotateLeft(C1 * k1, 31);
-                break;
-            case 14:
-                k2 ^= (ulong)tail[position + 13] << 40;
-                k2 ^= (ulong)tail[position + 12] << 32;
-                k2 ^= (ulong)tail[position + 11] << 24;
-                k2 ^= (ulong)tail[position + 10] << 16;
-                k2 ^= (ulong)tail[position + 9] << 8;
-                k2 ^= tail[position + 8];
-                _h2 ^= C1 * RotateLeft(C2 * k2, 33);
-                k1 ^= (ulong)tail[position + 7] << 56;
-                k1 ^= (ulong)tail[position + 6] << 48;
-                k1 ^= (ulong)tail[position + 5] << 40;
-                k1 ^= (ulong)tail[position + 4] << 32;
-                k1 ^= (ulong)tail[position + 3] << 24;
-                k1 ^= (ulong)tail[position + 2] << 16;
-                k1 ^= (ulong)tail[position + 1] << 8;
-                k1 ^= tail[position];
-                _h1 ^= C2 * RotateLeft(C1 * k1, 31);
-                break;
-            case 13:
-                k2 ^= (ulong)tail[position + 12] << 32;
-                k2 ^= (ulong)tail[position + 11] << 24;
-                k2 ^= (ulong)tail[position + 10] << 16;
-                k2 ^= (ulong)tail[position + 9] << 8;
-                k2 ^= tail[position + 8];
-                _h2 ^= C1 * RotateLeft(C2 * k2, 33);
-                k1 ^= (ulong)tail[position + 7] << 56;
-                k1 ^= (ulong)tail[position + 6] << 48;
-                k1 ^= (ulong)tail[position + 5] << 40;
-                k1 ^= (ulong)tail[position + 4] << 32;
-                k1 ^= (ulong)tail[position + 3] << 24;
-                k1 ^= (ulong)tail[position + 2] << 16;
-                k1 ^= (ulong)tail[position + 1] << 8;
-                k1 ^= tail[position];
-                _h1 ^= C2 * RotateLeft(C1 * k1, 31);
-                break;
-            case 12:
-                k2 ^= (ulong)tail[position + 11] << 24;
-                k2 ^= (ulong)tail[position + 10] << 16;
-                k2 ^= (ulong)tail[position + 9] << 8;
-                k2 ^= tail[position + 8];
-                _h2 ^= C1 * RotateLeft(C2 * k2, 33);
-                k1 ^= (ulong)tail[position + 7] << 56;
-                k1 ^= (ulong)tail[position + 6] << 48;
-                k1 ^= (ulong)tail[position + 5] << 40;
-                k1 ^= (ulong)tail[position + 4] << 32;
-                k1 ^= (ulong)tail[position + 3] << 24;
-                k1 ^= (ulong)tail[position + 2] << 16;
-                k1 ^= (ulong)tail[position + 1] << 8;
-                k1 ^= tail[position];
-                _h1 ^= C2 * RotateLeft(C1 * k1, 31);
-                break;
-            case 11:
-                k2 ^= (ulong)tail[position + 10] << 16;
-                k2 ^= (ulong)tail[position + 9] << 8;
-                k2 ^= tail[position + 8];
-                _h2 ^= C1 * RotateLeft(C2 * k2, 33);
-                k1 ^= (ulong)tail[position + 7] << 56;
-                k1 ^= (ulong)tail[position + 6] << 48;
-                k1 ^= (ulong)tail[position + 5] << 40;
-                k1 ^= (ulong)tail[position + 4] << 32;
-                k1 ^= (ulong)tail[position + 3] << 24;
-                k1 ^= (ulong)tail[position + 2] << 16;
-                k1 ^= (ulong)tail[position + 1] << 8;
-                k1 ^= tail[position];
-                _h1 ^= C2 * RotateLeft(C1 * k1, 31);
-                break;
-            case 10:
-                k2 ^= (ulong)tail[position + 9] << 8;
-                k2 ^= tail[position + 8];
-                _h2 ^= C1 * RotateLeft(C2 * k2, 33);
-                k1 ^= (ulong)tail[position + 7] << 56;
-                k1 ^= (ulong)tail[position + 6] << 48;
-                k1 ^= (ulong)tail[position + 5] << 40;
-                k1 ^= (ulong)tail[position + 4] << 32;
-                k1 ^= (ulong)tail[position + 3] << 24;
-                k1 ^= (ulong)tail[position + 2] << 16;
-                k1 ^= (ulong)tail[position + 1] << 8;
-                k1 ^= tail[position];
-                _h1 ^= C2 * RotateLeft(C1 * k1, 31);
-                break;
-            case 9:
-                k2 ^= tail[position + 8];
-                _h2 ^= C1 * RotateLeft(C2 * k2, 33);
-                k1 ^= (ulong)tail[position + 7] << 56;
-                k1 ^= (ulong)tail[position + 6] << 48;
-                k1 ^= (ulong)tail[position + 5] << 40;
-                k1 ^= (ulong)tail[position + 4] << 32;
-                k1 ^= (ulong)tail[position + 3] << 24;
-                k1 ^= (ulong)tail[position + 2] << 16;
-                k1 ^= (ulong)tail[position + 1] << 8;
-                k1 ^= tail[position];
-                _h1 ^= C2 * RotateLeft(C1 * k1, 31);
-                break;
-            case 8:
-                k1 ^= (ulong)tail[position + 7] << 56;
-                k1 ^= (ulong)tail[position + 6] << 48;
-                k1 ^= (ulong)tail[position + 5] << 40;
-                k1 ^= (ulong)tail[position + 4] << 32;
-                k1 ^= (ulong)tail[position + 3] << 24;
-                k1 ^= (ulong)tail[position + 2] << 16;
-                k1 ^= (ulong)tail[position + 1] << 8;
-                k1 ^= tail[position];
-                _h1 ^= C2 * RotateLeft(C1 * k1, 31);
-                break;
-            case 7:
-                k1 ^= (ulong)tail[position + 6] << 48;
-                k1 ^= (ulong)tail[position + 5] << 40;
-                k1 ^= (ulong)tail[position + 4] << 32;
-                k1 ^= (ulong)tail[position + 3] << 24;
-                k1 ^= (ulong)tail[position + 2] << 16;
-                k1 ^= (ulong)tail[position + 1] << 8;
-                k1 ^= tail[position];
-                _h1 ^= C2 * RotateLeft(C1 * k1, 31);
-                break;
-            case 6:
-                k1 ^= (ulong)tail[position + 5] << 40;
-                k1 ^= (ulong)tail[position + 4] << 32;
-                k1 ^= (ulong)tail[position + 3] << 24;
-                k1 ^= (ulong)tail[position + 2] << 16;
-                k1 ^= (ulong)tail[position + 1] << 8;
-                k1 ^= tail[position];
-                _h1 ^= C2 * RotateLeft(C1 * k1, 31);
-                break;
-            case 5:
-                k1 ^= (ulong)tail[position + 4] << 32;
-                k1 ^= (ulong)tail[position + 3] << 24;
-                k1 ^= (ulong)tail[position + 2] << 16;
-                k1 ^= (ulong)tail[position + 1] << 8;
-                k1 ^= tail[position];
-                _h1 ^= C2 * RotateLeft(C1 * k1, 31);
-                break;
-            case 4:
-                k1 ^= (ulong)tail[position + 3] << 24;
-                k1 ^= (ulong)tail[position + 2] << 16;
-                k1 ^= (ulong)tail[position + 1] << 8;
-                k1 ^= tail[position];
-                _h1 ^= C2 * RotateLeft(C1 * k1, 31);
-                break;
-            case 3:
-                k1 ^= (ulong)tail[position + 2] << 16;
-                k1 ^= (ulong)tail[position + 1] << 8;
-                k1 ^= tail[position];
-                _h1 ^= C2 * RotateLeft(C1 * k1, 31);
-                break;
-            case 2:
-                k1 ^= (ulong)tail[position + 1] << 8;
-                k1 ^= tail[position];
-                _h1 ^= C2 * RotateLeft(C1 * k1, 31);
-                break;
-            case 1:
-                k1 ^= tail[position];
-                _h1 ^= C2 * RotateLeft(C1 * k1, 31);
-                break;
+            return;
         }
+
+        Span<byte> buffer = stackalloc byte[16];
+        buffer.Clear();
+        tail.Slice(position, remainder).CopyTo(buffer);
+
+        ulong k1 = MemoryMarshal.Read<ulong>(buffer);
+        ulong k2 = MemoryMarshal.Read<ulong>(buffer.Slice(8));
+
+        if (remainder > 8)
+        {
+            _h2 ^= C1 * RotateLeft(C2 * k2, 33);
+        }
+
+        _h1 ^= C2 * RotateLeft(C1 * k1, 31);
     }
 }

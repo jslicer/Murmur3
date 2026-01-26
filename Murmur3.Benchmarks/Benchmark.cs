@@ -64,11 +64,14 @@ public class Benchmark
     /// </summary>
     /// <returns>The resulting hash value of the random byte array.</returns>
     [Benchmark]
-    public byte[] Murmur3A()
+    public bool Murmur3A()
     {
         _murmur3A.Reset();
         _murmur3A.Append(_data);
-        return _murmur3A.GetCurrentHash();
+
+        Span<byte> hash32 = stackalloc byte[_murmur3A.HashLengthInBytes];
+
+        return _murmur3A.TryGetCurrentHash(hash32, out int bytesWritten) && bytesWritten == hash32.Length;
     }
 
     /// <summary>
@@ -76,11 +79,14 @@ public class Benchmark
     /// </summary>
     /// <returns>The resulting hash value of the random byte array.</returns>
     [Benchmark]
-    public byte[] Murmur3C()
+    public bool Murmur3C()
     {
         _murmur3C.Reset();
         _murmur3C.Append(_data);
-        return _murmur3C.GetCurrentHash();
+
+        Span<byte> hash128C = stackalloc byte[_murmur3C.HashLengthInBytes];
+
+        return _murmur3C.TryGetCurrentHash(hash128C, out int bytesWritten) && bytesWritten == hash128C.Length;
     }
 
     /// <summary>
@@ -88,10 +94,13 @@ public class Benchmark
     /// </summary>
     /// <returns>The resulting hash value of the random byte array.</returns>
     [Benchmark]
-    public byte[] Murmur3F()
+    public bool Murmur3F()
     {
         _murmur3F.Reset();
         _murmur3F.Append(_data);
-        return _murmur3F.GetCurrentHash();
+
+        Span<byte> hash128F = stackalloc byte[_murmur3F.HashLengthInBytes];
+
+        return _murmur3F.TryGetCurrentHash(hash128F, out int bytesWritten) && bytesWritten == hash128F.Length;
     }
 }
