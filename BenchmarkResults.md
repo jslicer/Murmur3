@@ -10,6 +10,6 @@ AMD EPYC 7763 2.45GHz, 1 CPU, 4 logical and 2 physical cores
 ```
 | Method   | Mean     | Error    | StdDev   |
 |--------- |---------:|---------:|---------:|
-| Murmur3A | 33.38 μs | 0.099 μs | 0.088 μs |
-| Murmur3C | 31.58 μs | 0.058 μs | 0.048 μs |
-| Murmur3F | 18.58 μs | 0.034 μs | 0.031 μs |
+| Murmur3A | 35.25 μs | 0.346 μs | 0.289 μs |
+| Murmur3C | 27.60 μs | 0.028 μs | 0.025 μs |
+| Murmur3F | 17.52 μs | 0.021 μs | 0.020 μs |
