@@ -36,17 +36,17 @@ This will output BDD2AE7116C85A45 as the Murmur3 128-bit x64 hash of the string 
 <!-- BENCHMARK_RESULTS_START -->
 ```
 
-BenchmarkDotNet v0.15.8, Linux Ubuntu 24.04.3 LTS (Noble Numbat)
-Intel Xeon Platinum 8370C CPU 2.80GHz (Max: 2.79GHz), 1 CPU, 4 logical and 2 physical cores
-.NET SDK 10.0.102
-  [Host]     : .NET 10.0.2 (10.0.2, 10.0.225.61305), X64 RyuJIT x86-64-v4
-  DefaultJob : .NET 10.0.2 (10.0.2, 10.0.225.61305), X64 RyuJIT x86-64-v4
+BenchmarkDotNet v0.15.8, Linux Ubuntu 24.04.4 LTS (Noble Numbat)
+AMD EPYC 9V74 2.60GHz, 1 CPU, 4 logical and 2 physical cores
+.NET SDK 10.0.400
+  [Host]     : .NET 10.0.11 (10.0.11, 10.0.1126.37416), X64 RyuJIT x86-64-v3
+  DefaultJob : .NET 10.0.11 (10.0.11, 10.0.1126.37416), X64 RyuJIT x86-64-v3
 
 
 ```
 | Method   | Mean     | Error    | StdDev   |
 |--------- |---------:|---------:|---------:|
-| Murmur3A | 67.38 μs | 0.060 μs | 0.050 μs |
-| Murmur3C | 25.77 μs | 0.013 μs | 0.010 μs |
-| Murmur3F | 21.77 μs | 0.004 μs | 0.003 μs |
+| Murmur3A | 39.90 μs | 0.009 μs | 0.008 μs |
+| Murmur3C | 36.52 μs | 0.042 μs | 0.035 μs |
+| Murmur3F | 19.86 μs | 0.079 μs | 0.066 μs |
 <!-- BENCHMARK_RESULTS_END -->
