@@ -58,7 +58,7 @@ public sealed class BogusMurmurTests2 : Murmur3TestsBase
     [TestMethod]
     public void EnsureBadConstructorCaught() =>
         _ = Assert.ThrowsExactly<MissingMethodException>(() =>
-                TestSmHasher("The quick brown fox jumps over the lazy dog"));
+            TestSmHasher("The quick brown fox jumps over the lazy dog"));
 
     /// <inheritdoc />
     /// <summary>

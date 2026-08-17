@@ -58,7 +58,7 @@ public sealed class BogusMurmurTests1 : Murmur3TestsBase
     [TestMethod]
     public void EnsureHashOfNullCaught() =>
         _ = Assert.ThrowsExactly<InvalidOperationException>(() =>
-                TestSmHasher("The quick brown fox jumps over the lazy dog"));
+            TestSmHasher("The quick brown fox jumps over the lazy dog"));
 
     /// <inheritdoc />
     /// <summary>
