@@ -1,5 +1,8 @@
 ﻿[*.cs]
 
+# IDE0055: Fix formatting
+dotnet_diagnostic.IDE0055.severity = suggestion
+
 # SA1309: Field names should not begin with underscore
 dotnet_diagnostic.SA1309.severity = none
 
