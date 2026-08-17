@@ -10,7 +10,12 @@
 // Ignore Spelling: Lorem Ipsum Hasher
 namespace Murmur3.Tests;
 
+using System.Globalization;
+using System.Text;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using static System.Globalization.NumberStyles;
 
 /// <summary>
 /// Tests the Murmur3 128 x86 hashing algorithm variant.
@@ -19,11 +24,14 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 [TestClass]
 //// ReSharper disable once ClassTooBig
 //// ReSharper disable once UnusedType.Global
+#pragma warning disable CA1515 // Consider making public types internal
 public sealed class Murmur3CTests : Murmur3TestsBase
+#pragma warning restore CA1515 // Consider making public types internal
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="Murmur3CTests" /> class.
     /// </summary>
+    /// <exception cref="ArgumentNullException">algType cannot be <see langword="null" />.</exception>
     public Murmur3CTests()
         : base(typeof(Murmur3C))
     {
@@ -33,6 +41,13 @@ public sealed class Murmur3CTests : Murmur3TestsBase
     /// <summary>
     /// Tests an empty <see langword="byte" /> array with an input seed of 0x00000000.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
     [TestMethod]
     //// ReSharper disable once UnusedMember.Global
     public void TestEmptyInputSeed0() => Test(
@@ -45,6 +60,17 @@ public sealed class Murmur3CTests : Murmur3TestsBase
     /// Tests a common string ("Lorem ipsum") with an input seed of 0x00000000.
     /// ReSharper restore CommentTypo.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="EncoderFallbackException">A fallback occurred (for more information, see Character Encoding in
+    /// .NET)
+    ///  -and-
+    ///  <see cref="EncoderFallback" /> is set to <see cref="EncoderExceptionFallback" />.</exception>
     [TestMethod]
     //// ReSharper disable IdentifierTypo
     //// ReSharper disable once UnusedMember.Global
@@ -64,6 +90,17 @@ public sealed class Murmur3CTests : Murmur3TestsBase
     /// <summary>
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="EncoderFallbackException">A fallback occurred (for more information, see Character Encoding in
+    /// .NET)
+    ///  -and-
+    ///  <see cref="EncoderFallback" /> is set to <see cref="EncoderExceptionFallback" />.</exception>
     [TestMethod]
     //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxInputSeed0() => Test(
@@ -74,6 +111,17 @@ public sealed class Murmur3CTests : Murmur3TestsBase
     /// <summary>
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="EncoderFallbackException">A fallback occurred (for more information, see Character Encoding in
+    /// .NET)
+    ///  -and-
+    ///  <see cref="EncoderFallback" /> is set to <see cref="EncoderExceptionFallback" />.</exception>
     [TestMethod]
     //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxPeriodInputSeed0() => Test(
@@ -84,6 +132,17 @@ public sealed class Murmur3CTests : Murmur3TestsBase
     /// <summary>
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="EncoderFallbackException">A fallback occurred (for more information, see Character Encoding in
+    /// .NET)
+    ///  -and-
+    ///  <see cref="EncoderFallback" /> is set to <see cref="EncoderExceptionFallback" />.</exception>
     [TestMethod]
     //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxTwoPeriodsInputSeed0() => Test(
@@ -94,6 +153,17 @@ public sealed class Murmur3CTests : Murmur3TestsBase
     /// <summary>
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="EncoderFallbackException">A fallback occurred (for more information, see Character Encoding in
+    /// .NET)
+    ///  -and-
+    ///  <see cref="EncoderFallback" /> is set to <see cref="EncoderExceptionFallback" />.</exception>
     [TestMethod]
     //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxThreePeriodsInputSeed0() => Test(
@@ -104,6 +174,17 @@ public sealed class Murmur3CTests : Murmur3TestsBase
     /// <summary>
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="EncoderFallbackException">A fallback occurred (for more information, see Character Encoding in
+    /// .NET)
+    ///  -and-
+    ///  <see cref="EncoderFallback" /> is set to <see cref="EncoderExceptionFallback" />.</exception>
     [TestMethod]
     //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxFourPeriodsInputSeed0() => Test(
@@ -114,6 +195,17 @@ public sealed class Murmur3CTests : Murmur3TestsBase
     /// <summary>
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="EncoderFallbackException">A fallback occurred (for more information, see Character Encoding in
+    /// .NET)
+    ///  -and-
+    ///  <see cref="EncoderFallback" /> is set to <see cref="EncoderExceptionFallback" />.</exception>
     [TestMethod]
     //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxFivePeriodsInputSeed0() => Test(
@@ -124,6 +216,17 @@ public sealed class Murmur3CTests : Murmur3TestsBase
     /// <summary>
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="EncoderFallbackException">A fallback occurred (for more information, see Character Encoding in
+    /// .NET)
+    ///  -and-
+    ///  <see cref="EncoderFallback" /> is set to <see cref="EncoderExceptionFallback" />.</exception>
     [TestMethod]
     //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxSixPeriodsInputSeed0() => Test(
@@ -134,6 +237,17 @@ public sealed class Murmur3CTests : Murmur3TestsBase
     /// <summary>
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="EncoderFallbackException">A fallback occurred (for more information, see Character Encoding in
+    /// .NET)
+    ///  -and-
+    ///  <see cref="EncoderFallback" /> is set to <see cref="EncoderExceptionFallback" />.</exception>
     [TestMethod]
     //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxSevenPeriodsInputSeed0() => Test(
@@ -144,6 +258,17 @@ public sealed class Murmur3CTests : Murmur3TestsBase
     /// <summary>
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="EncoderFallbackException">A fallback occurred (for more information, see Character Encoding in
+    /// .NET)
+    ///  -and-
+    ///  <see cref="EncoderFallback" /> is set to <see cref="EncoderExceptionFallback" />.</exception>
     [TestMethod]
     //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxEightPeriodsInputSeed0() => Test(
@@ -154,6 +279,17 @@ public sealed class Murmur3CTests : Murmur3TestsBase
     /// <summary>
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="EncoderFallbackException">A fallback occurred (for more information, see Character Encoding in
+    /// .NET)
+    ///  -and-
+    ///  <see cref="EncoderFallback" /> is set to <see cref="EncoderExceptionFallback" />.</exception>
     [TestMethod]
     //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxNinePeriodsInputSeed0() => Test(
@@ -164,6 +300,17 @@ public sealed class Murmur3CTests : Murmur3TestsBase
     /// <summary>
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="EncoderFallbackException">A fallback occurred (for more information, see Character Encoding in
+    /// .NET)
+    ///  -and-
+    ///  <see cref="EncoderFallback" /> is set to <see cref="EncoderExceptionFallback" />.</exception>
     [TestMethod]
     //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxTenPeriodsInputSeed0() => Test(
@@ -174,6 +321,17 @@ public sealed class Murmur3CTests : Murmur3TestsBase
     /// <summary>
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="EncoderFallbackException">A fallback occurred (for more information, see Character Encoding in
+    /// .NET)
+    ///  -and-
+    ///  <see cref="EncoderFallback" /> is set to <see cref="EncoderExceptionFallback" />.</exception>
     [TestMethod]
     //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxElevenPeriodsInputSeed0() => Test(
@@ -184,6 +342,17 @@ public sealed class Murmur3CTests : Murmur3TestsBase
     /// <summary>
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="EncoderFallbackException">A fallback occurred (for more information, see Character Encoding in
+    /// .NET)
+    ///  -and-
+    ///  <see cref="EncoderFallback" /> is set to <see cref="EncoderExceptionFallback" />.</exception>
     [TestMethod]
     //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxTwelvePeriodsInputSeed0() => Test(
@@ -194,6 +363,17 @@ public sealed class Murmur3CTests : Murmur3TestsBase
     /// <summary>
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="EncoderFallbackException">A fallback occurred (for more information, see Character Encoding in
+    /// .NET)
+    ///  -and-
+    ///  <see cref="EncoderFallback" /> is set to <see cref="EncoderExceptionFallback" />.</exception>
     [TestMethod]
     //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxThirteenPeriodsInputSeed0() => Test(
@@ -204,6 +384,17 @@ public sealed class Murmur3CTests : Murmur3TestsBase
     /// <summary>
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="EncoderFallbackException">A fallback occurred (for more information, see Character Encoding in
+    /// .NET)
+    ///  -and-
+    ///  <see cref="EncoderFallback" /> is set to <see cref="EncoderExceptionFallback" />.</exception>
     [TestMethod]
     //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxFourteenPeriodsInputSeed0() => Test(
@@ -214,6 +405,17 @@ public sealed class Murmur3CTests : Murmur3TestsBase
     /// <summary>
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="EncoderFallbackException">A fallback occurred (for more information, see Character Encoding in
+    /// .NET)
+    ///  -and-
+    ///  <see cref="EncoderFallback" /> is set to <see cref="EncoderExceptionFallback" />.</exception>
     [TestMethod]
     //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxFifteenPeriodsInputSeed0() => Test(
@@ -224,6 +426,17 @@ public sealed class Murmur3CTests : Murmur3TestsBase
     /// <summary>
     /// Tests a common string ("The quick brown fox") with an input seed of 0x9747B28C.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="EncoderFallbackException">A fallback occurred (for more information, see Character Encoding in
+    /// .NET)
+    ///  -and-
+    ///  <see cref="EncoderFallback" /> is set to <see cref="EncoderExceptionFallback" />.</exception>
     [TestMethod]
     //// ReSharper disable InconsistentNaming
     //// ReSharper disable once UnusedMember.Global
@@ -242,6 +455,17 @@ public sealed class Murmur3CTests : Murmur3TestsBase
     /// <summary>
     /// Tests a common string ("The quick brown fox") with an input seed of 0xC58F1A7B.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="EncoderFallbackException">A fallback occurred (for more information, see Character Encoding in
+    /// .NET)
+    ///  -and-
+    ///  <see cref="EncoderFallback" /> is set to <see cref="EncoderExceptionFallback" />.</exception>
     [TestMethod]
     //// ReSharper disable InconsistentNaming
     //// ReSharper disable once UnusedMember.Global
@@ -260,6 +484,21 @@ public sealed class Murmur3CTests : Murmur3TestsBase
     /// <summary>
     /// Tests using the SMHasher KeysetTest VerificationTest.
     /// </summary>
+    /// <exception cref="MissingMethodException">Hash algorithm constructor not found.</exception>
+    /// <exception cref="InvalidOperationException">Hash invalid.</exception>
+    /// <exception cref="OverflowException">The array is multidimensional and contains more than
+    /// <see cref="int.MaxValue">Int32.MaxValue</see> elements.</exception>
+    /// <exception cref="ArrayTypeMismatchException">array is covariant, and the array's type is not exactly
+    /// <see langword="T[]" />".</exception>
+    /// <exception cref="ArgumentOutOfRangeException">start, length, or start + length> is not in the range of
+    /// array.</exception>
+    /// <exception cref="ArgumentNullException">source is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
     [TestMethod]
     //// ReSharper disable once UnusedMember.Global
     public void TestSmHasher() => TestSmHasher("79C0CA32C3944F38D61A233AB3ECE62A");

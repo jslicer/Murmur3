@@ -7,23 +7,30 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
+// Ignore Spelling: Hasher
 namespace Murmur3.Tests;
 
 using System.Diagnostics.CodeAnalysis;
+using System.Globalization;
 using System.IO.Hashing;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using static System.Globalization.NumberStyles;
 
 /// <summary>
 /// Tests a bogus hash class.
 /// </summary>
 /// <seealso cref="Murmur3TestsBase" />
 [TestClass]
+#pragma warning disable CA1515 // Consider making public types internal
 public sealed class BogusHasherTests : Murmur3TestsBase
+#pragma warning restore CA1515 // Consider making public types internal
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="BogusHasherTests" /> class.
     /// </summary>
+    /// <exception cref="ArgumentNullException">algType cannot be <see langword="null" />.</exception>
     public BogusHasherTests()
         : base(typeof(BogusHasher))
     {
@@ -34,6 +41,22 @@ public sealed class BogusHasherTests : Murmur3TestsBase
     /// Tests that when the hash algorithm is not a proper descendant of Murmur3 it throws the appropriate
     /// exception.
     /// </summary>
+    /// <exception cref="AssertFailedException">Thrown if action does not throw exception of type
+    /// TException.</exception>
+    /// <exception cref="MissingMethodException">Hash algorithm constructor not found.</exception>
+    /// <exception cref="InvalidOperationException">Hash invalid.</exception>
+    /// <exception cref="OverflowException">The array is multidimensional and contains more than
+    /// <see cref="int.MaxValue">Int32.MaxValue</see> elements.</exception>
+    /// <exception cref="ArrayTypeMismatchException">array is covariant, and the array's type is not exactly
+    /// <see langword="T[]" />".</exception>
+    /// <exception cref="ArgumentOutOfRangeException">start, length, or start + length> is not in the range of
+    /// array.</exception>
+    /// <exception cref="ArgumentNullException">source is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
     [TestMethod]
     public void EnsureNonMurmur3HasherCaught() =>
         Assert.ThrowsExactly<InvalidOperationException>(() =>
@@ -44,7 +67,9 @@ public sealed class BogusHasherTests : Murmur3TestsBase
     /// </summary>
     /// <seealso cref="NonCryptographicHashAlgorithm" />
     [method: ExcludeFromCodeCoverage]
+#pragma warning disable CA1812 // This is an internal class that is apparently never instantiated
     private sealed class BogusHasher() : NonCryptographicHashAlgorithm(32)
+#pragma warning restore CA1812 // This is an internal class that is apparently never instantiated
     {
         /// <inheritdoc />
         /// <summary>

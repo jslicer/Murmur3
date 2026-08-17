@@ -24,6 +24,7 @@ public abstract class Murmur3Base : NonCryptographicHashAlgorithm
     /// </summary>
     /// <param name="hashSizeValue">The hash size value in bits.</param>
     /// <param name="seed">The seed value.</param>
+    /// <exception cref="ArgumentOutOfRangeException">hashLengthInBytes is less than 1.</exception>
     protected Murmur3Base(int hashSizeValue, int seed = 0x00000000)
         : base(hashSizeValue >> 3) =>
         Seed = unchecked((uint)seed);

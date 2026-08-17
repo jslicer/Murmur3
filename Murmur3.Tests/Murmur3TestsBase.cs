@@ -10,19 +10,25 @@
 // Ignore Spelling: alg Hasher
 namespace Murmur3.Tests;
 
+using System.Globalization;
 using System.IO.Hashing;
 using System.Numerics;
+using System.Text;
 
 using static System.Globalization.CultureInfo;
 using static System.Globalization.NumberStyles;
 using static System.Numerics.BigInteger;
 
+#pragma warning disable IDE0001
 using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
+#pragma warning restore IDE0001
 
 /// <summary>
 /// Implements the common functionality to test all the Murmur3 hashing algorithm variants.
 /// </summary>
+#pragma warning disable CA1515 // Consider making public types internal
 public abstract class Murmur3TestsBase
+#pragma warning restore CA1515 // Consider making public types internal
 {
     /// <summary>
     /// The empty hash value used for testing.
@@ -53,6 +59,14 @@ public abstract class Murmur3TestsBase
     /// <param name="input">The input byte array.</param>
     /// <param name="message">The message to show if the test fails.</param>
     /// <param name="seed">The seed value.</param>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
+    /// <exception cref="AssertFailedException">Thrown if <paramref name="expected" /> is not equal to
+    /// actual.</exception>
     // ReSharper disable once TooManyArguments
 #pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable RS0026 // Do not add multiple public overloads with optional parameters
@@ -68,6 +82,19 @@ public abstract class Murmur3TestsBase
     /// <param name="input">The input string.</param>
     /// <param name="message">The message to show if the test fails.</param>
     /// <param name="seed">The seed value.</param>
+    /// <exception cref="ArgumentNullException">s is <see langword="null" />.</exception>
+    /// <exception cref="EncoderFallbackException">A fallback occurred (for more information, see Character Encoding in
+    /// .NET)
+    ///  -and-
+    ///  <see cref="EncoderFallback" /> is set to <see cref="EncoderExceptionFallback" />.</exception>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
+    /// <exception cref="AssertFailedException">Thrown if <paramref name="expected" /> is not equal to
+    /// actual.</exception>
     // ReSharper disable once TooManyArguments
 #pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable RS0026 // Do not add multiple public overloads with optional parameters
@@ -76,7 +103,7 @@ public abstract class Murmur3TestsBase
 #pragma warning restore IDE0079 // Remove unnecessary suppression
         AreEqual(
             Parse(expected, AllowHexSpecifier, InvariantCulture),
-            Hash(System.Text.Encoding.UTF8.GetBytes(input), seed),
+            Hash(Encoding.UTF8.GetBytes(input), seed),
             message);
 
     /// <summary>
@@ -87,6 +114,20 @@ public abstract class Murmur3TestsBase
     /// <param name="expected">The expected value.</param>
     /// <exception cref="MissingMethodException">Hash algorithm constructor not found.</exception>
     /// <exception cref="InvalidOperationException">Hash invalid.</exception>
+    /// <exception cref="OverflowException">The array is multidimensional and contains more than
+    /// <see cref="int.MaxValue">Int32.MaxValue</see> elements.</exception>
+    /// <exception cref="ArrayTypeMismatchException">array is covariant, and the array's type is not exactly
+    /// <see langword="T[]" />".</exception>
+    /// <exception cref="ArgumentOutOfRangeException">start, length, or start + length> is not in the range of
+    /// array.</exception>
+    /// <exception cref="ArgumentNullException">source is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="AssertFailedException">Thrown if <paramref name="expected" /> is not equal to
+    /// actual.</exception>
     // ReSharper disable once MethodTooLong
     protected void TestSmHasher(string expected)
     {
@@ -137,7 +178,7 @@ public abstract class Murmur3TestsBase
         Span<byte> destination = stackalloc byte[alg.HashLengthInBytes];
 
         alg.Append(input);
-        alg.GetCurrentHash(destination);
+        _ = alg.GetCurrentHash(destination);
         return new(destination);
     }
 

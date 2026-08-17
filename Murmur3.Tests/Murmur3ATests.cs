@@ -7,10 +7,15 @@
 // </summary>
 // --------------------------------------------------------------------------------------------------------------------
 
-// Ignore Spelling: Lorem Ipsum Hasher
+// Ignore Spelling: Lorem Ipsum Hasher EDEE
 namespace Murmur3.Tests;
 
+using System.Globalization;
+using System.Text;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using static System.Globalization.NumberStyles;
 
 /// <summary>
 /// Tests the Murmur3 32 x86 hashing algorithm variant.
@@ -18,17 +23,21 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 /// <seealso cref="Murmur3TestsBase" />
 [TestClass]
 //// ReSharper disable once UnusedType.Global
+#pragma warning disable CA1515 // Consider making public types internal
 public sealed class Murmur3ATests : Murmur3TestsBase
+#pragma warning restore CA1515 // Consider making public types internal
 {
     /// <summary>
     /// The make sure compiler doesn't see zero and convert to null.
     /// </summary>
+    // ReSharper disable once IdentifierTypo
     private const string MakeSureCompilerDoesntSeeZeroAndConvertToNull =
         "Make sure compiler doesn't see zero and convert to null";
 
     /// <summary>
     /// Initializes a new instance of the <see cref="Murmur3ATests" /> class.
     /// </summary>
+    /// <exception cref="ArgumentNullException">algType cannot be <see langword="null" />.</exception>
     public Murmur3ATests()
         : base(typeof(Murmur3A))
     {
@@ -38,6 +47,13 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// <summary>
     /// Tests an empty <see langword="byte" /> array with an input seed of 0x00000000.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
     [TestMethod]
     //// ReSharper disable once UnusedMember.Global
     public void TestEmptyInputSeed0() => Test(
@@ -48,6 +64,13 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// <summary>
     /// Tests an empty <see langword="byte" /> array with an input seed of 0x00000001.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
     [TestMethod]
     //// ReSharper disable once UnusedMember.Global
     public void TestEmptyInputSeed1() =>
@@ -61,6 +84,13 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// ReSharper disable once CommentTypo
     /// Tests an empty <see langword="byte" /> array with an input seed of 0xFFFFFFFF.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
     [TestMethod]
     //// ReSharper disable once InconsistentNaming
     //// ReSharper disable IdentifierTypo
@@ -81,6 +111,13 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// ReSharper disable once CommentTypo
     /// Tests an array with bytes 0xFFFFFFFF with an input seed of 0x00000000.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
     [TestMethod]
     //// ReSharper disable once InconsistentNaming
     //// ReSharper disable IdentifierTypo
@@ -100,6 +137,13 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// <summary>
     /// Tests an array with bytes 0x87654321 with an input seed of 0x00000000.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
     [TestMethod]
     //// ReSharper disable once UnusedMember.Global
     public void Test21436587InputSeed0() => Test(
@@ -112,6 +156,13 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// ReSharper disable once CommentTypo
     /// Tests an array with bytes 0x87654321 with an input seed of 0x5082EDEE.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
     [TestMethod]
     //// ReSharper disable once InconsistentNaming
     //// ReSharper disable IdentifierTypo
@@ -132,37 +183,65 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// <summary>
     /// Tests an array with bytes 0x654321 with an input seed of 0x00000000.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
     [TestMethod]
     //// ReSharper disable once UnusedMember.Global
     public void Test214365InputSeed0() => Test(
         "7E4A8634",
         //// ReSharper disable once StyleCop.SA1502
-        "!Ce"u8.ToArray(),
+        [.. "!Ce"u8],
         "Only three bytes. Should end up as 0x654321");
 
     /// <summary>
     /// Tests an array with bytes 0x4321 with an input seed of 0x00000000.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
     [TestMethod]
     //// ReSharper disable once UnusedMember.Global
     public void Test2143InputSeed0() => Test(
         "A0F7B07A",
         //// ReSharper disable once StyleCop.SA1502
-        "!C"u8.ToArray(),
+        [.. "!C"u8],
         "Only two bytes. Should end up as 0x4321");
 
     /// <summary>
     /// Tests an array with <see langword="byte" /> 0x21 with an input seed of 0x00000000.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
     [TestMethod]
     //// ReSharper disable once UnusedMember.Global
     public void Test21InputSeed0() =>
         //// ReSharper disable once StyleCop.SA1502
-        Test("72661CF4", "!"u8.ToArray(), "Only one byte. Should end up as 0x21");
+        Test("72661CF4", [.. "!"u8], "Only one byte. Should end up as 0x21");
 
     /// <summary>
     /// Tests an array with <see langword="byte" />s 0x00000000 with an input seed of 0x00000000.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
     [TestMethod]
     //// ReSharper disable once UnusedMember.Global
     public void Test00000000InputSeed0() =>
@@ -171,6 +250,13 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// <summary>
     /// Tests an array with <see langword="byte" />s 0x000000 with an input seed of 0x00000000.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
     [TestMethod]
     //// ReSharper disable once UnusedMember.Global
     public void Test000000InputSeed0() =>
@@ -179,6 +265,13 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// <summary>
     /// Tests an array with <see langword="byte" />s 0x0000 with an input seed of 0x00000000.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
     [TestMethod]
     //// ReSharper disable once UnusedMember.Global
     public void Test0000InputSeed0() =>
@@ -187,6 +280,13 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// <summary>
     /// Tests an array with <see langword="byte" />s 0x00 with an input seed of 0x00000000.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
     [TestMethod]
     //// ReSharper disable once UnusedMember.Global
     public void Test00InputSeed0() =>
@@ -197,6 +297,17 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// Tests a common string ("Lorem ipsum") with an input seed of 0x00000000.
     /// ReSharper restore CommentTypo.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
+    /// <exception cref="EncoderFallbackException">A fallback occurred (for more information, see Character Encoding in
+    /// .NET)
+    ///  -and-
+    ///  <see cref="EncoderFallback" /> is set to <see cref="EncoderExceptionFallback" />.</exception>
     [TestMethod]
     //// ReSharper disable IdentifierTypo
     //// ReSharper disable once UnusedMember.Global
@@ -216,6 +327,17 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// <summary>
     /// Tests a common string ("The quick brown fox") with an input seed of 0x00000000.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
+    /// <exception cref="EncoderFallbackException">A fallback occurred (for more information, see Character Encoding in
+    /// .NET)
+    ///  -and-
+    ///  <see cref="EncoderFallback" /> is set to <see cref="EncoderExceptionFallback" />.</exception>
     [TestMethod]
     //// ReSharper disable once UnusedMember.Global
     public void TestQuickBrownFoxInputSeed0() => Test(
@@ -226,6 +348,17 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// <summary>
     /// Tests a common string ("The quick brown fox") with an input seed of 0x9747B28C.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
+    /// <exception cref="EncoderFallbackException">A fallback occurred (for more information, see Character Encoding in
+    /// .NET)
+    ///  -and-
+    ///  <see cref="EncoderFallback" /> is set to <see cref="EncoderExceptionFallback" />.</exception>
     [TestMethod]
     //// ReSharper disable InconsistentNaming
     //// ReSharper disable once UnusedMember.Global
@@ -244,6 +377,17 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// <summary>
     /// Tests a common string ("The quick brown fox") with an input seed of 0xC58F1A7B.
     /// </summary>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="ArgumentNullException">value is <see langword="null" />.</exception>
+    /// <exception cref="EncoderFallbackException">A fallback occurred (for more information, see Character Encoding in
+    /// .NET)
+    ///  -and-
+    ///  <see cref="EncoderFallback" /> is set to <see cref="EncoderExceptionFallback" />.</exception>
     [TestMethod]
     //// ReSharper disable InconsistentNaming
     //// ReSharper disable once UnusedMember.Global
@@ -262,6 +406,21 @@ public sealed class Murmur3ATests : Murmur3TestsBase
     /// <summary>
     /// Tests using the SMHasher KeysetTest VerificationTest.
     /// </summary>
+    /// <exception cref="MissingMethodException">Hash algorithm constructor not found.</exception>
+    /// <exception cref="InvalidOperationException">Hash invalid.</exception>
+    /// <exception cref="OverflowException">The array is multidimensional and contains more than
+    /// <see cref="int.MaxValue">Int32.MaxValue</see> elements.</exception>
+    /// <exception cref="ArrayTypeMismatchException">array is covariant, and the array's type is not exactly
+    /// <see langword="T[]" />".</exception>
+    /// <exception cref="ArgumentOutOfRangeException">start, length, or start + length> is not in the range of
+    /// array.</exception>
+    /// <exception cref="ArgumentNullException">source is <see langword="null" />.</exception>
+    /// <exception cref="ArgumentException">style is not a <see cref="NumberStyles" /> value.
+    ///  -or-
+    ///  style includes the <see cref="AllowHexSpecifier" /> or <see cref="HexNumber" /> flag along with another
+    /// value.</exception>
+    /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
+    /// <exception cref="AssertFailedException">Thrown if expected is not equal to actual.</exception>
     [TestMethod]
     //// ReSharper disable once UnusedMember.Global
     public void TestSmHasher() => TestSmHasher("B0F57EE3");

@@ -9,7 +9,6 @@
 
 namespace Murmur3;
 
-using System;
 using System.Buffers.Binary;
 using System.IO.Hashing;
 using System.Runtime.CompilerServices;
@@ -59,19 +58,22 @@ public sealed class Murmur3A : Murmur3Base
     ///   processed for the current hash computation.
     /// </summary>
     /// <param name="source">The data to process.</param>
+    /// <exception cref="ArgumentOutOfRangeException">start is less than zero or greater than
+    /// <see cref="Span{T}" />.</exception>
+    /// <exception cref="OverflowException">The Length property of the new <see cref="ReadOnlySpan{T}" /> would exceed
+    /// MaxValue.</exception>
+    /// <exception cref="ArgumentException">TFrom or TTo contains managed object references.</exception>
     public override void Append(ReadOnlySpan<byte> source)
     {
         Length += source.Length;
 
+        // ReSharper disable once InconsistentNaming
         const int BlockSizeInBytes = 4;
         int remainder = source.Length & (BlockSizeInBytes - 1);
         int alignedLength = source.Length - remainder;
 
-        ReadOnlySpan<uint> blocks = MemoryMarshal.Cast<byte, uint>(source[..alignedLength]);
-        for (int i = 0; i < blocks.Length; i++)
+        foreach (uint k in MemoryMarshal.Cast<byte, uint>(source[..alignedLength]))
         {
-            uint k = blocks[i];
-
             _h1 ^= C2 * RotateLeft(C1 * k, 15);
             _h1 = (5 * RotateLeft(_h1, 13)) + 0xE6546B64;
         }
@@ -101,6 +103,8 @@ public sealed class Murmur3A : Murmur3Base
     ///     down to be exactly <see cref="NonCryptographicHashAlgorithm.HashLengthInBytes" /> in length.
     ///   </para>
     /// </remarks>
+    /// <exception cref="ArgumentOutOfRangeException"><paramref name="destination" /> is too small to contain a
+    /// <see cref="uint" />.</exception>
     protected override void GetCurrentHashCore(Span<byte> destination)
     {
         uint h1 = FMix(_h1 ^ (uint)Length);
@@ -159,10 +163,12 @@ public sealed class Murmur3A : Murmur3Base
         }
 
         Span<byte> buffer = stackalloc byte[4];
+
         buffer.Clear();
         tail.Slice(position, remainder).CopyTo(buffer);
 
         uint k1 = MemoryMarshal.Read<uint>(buffer);
+
         _h1 ^= C2 * RotateLeft(C1 * k1, 15);
     }
 }

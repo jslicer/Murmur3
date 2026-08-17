@@ -9,8 +9,6 @@
 
 namespace Murmur3;
 
-using System;
-using System.Buffers.Binary;
 using System.IO.Hashing;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
@@ -46,6 +44,7 @@ public sealed class Murmur3F : Murmur3Base
     /// Initializes a new instance of the <see cref="Murmur3F" /> class.
     /// </summary>
     /// <param name="seed">The seed value.</param>
+    /// <exception cref="ArgumentOutOfRangeException">hashLengthInBytes is less than 1.</exception>
     public Murmur3F(int seed = 0x00000000)
         : base(128, seed) =>
         Init();
@@ -64,16 +63,24 @@ public sealed class Murmur3F : Murmur3Base
     ///   processed for the current hash computation.
     /// </summary>
     /// <param name="source">The data to process.</param>
+    /// <exception cref="ArgumentOutOfRangeException">start is less than zero or greater than
+    /// <see cref="Span{T}.Length" />.</exception>
+    /// <exception cref="OverflowException">The Length property of the new <see cref="ReadOnlySpan{T}" /> would exceed
+    /// MaxValue.</exception>
+    /// <exception cref="ArgumentException">TFrom or TTo contains managed object references.</exception>
+    /// <exception cref="IndexOutOfRangeException">index is less than zero or greater than or equal to
+    /// <see cref="ReadOnlySpan{T}.Length" />.</exception>
     // ReSharper disable once MethodTooLong
     public override void Append(ReadOnlySpan<byte> source)
     {
         Length += source.Length;
 
+        // ReSharper disable once InconsistentNaming
         const int BlockSizeInBytes = 16;
         int remainder = source.Length & (BlockSizeInBytes - 1);
         int alignedLength = source.Length - remainder;
-
         ReadOnlySpan<ulong> blocks = MemoryMarshal.Cast<byte, ulong>(source[..alignedLength]);
+
         for (int i = 0; i < blocks.Length; i += 2)
         {
             ulong k1 = blocks[i];
@@ -127,6 +134,11 @@ public sealed class Murmur3F : Murmur3Base
     ///     down to be exactly <see cref="NonCryptographicHashAlgorithm.HashLengthInBytes" /> in length.
     ///   </para>
     /// </remarks>
+    /// <exception cref="OverflowException">The Length property of the new <see cref="ReadOnlySpan{T}" /> would exceed
+    /// MaxValue.</exception>
+    /// <exception cref="ArgumentException">TFrom or Tto contains managed object references.</exception>
+    /// <exception cref="IndexOutOfRangeException">index is less than zero or greater than or equal to
+    /// <see cref="Span{T}.Length" />.</exception>
     protected override void GetCurrentHashCore(Span<byte> destination)
     {
         ulong h1 = _h1;
@@ -145,6 +157,7 @@ public sealed class Murmur3F : Murmur3Base
         h2 += h1;
 
         Span<ulong> writer = MemoryMarshal.Cast<byte, ulong>(destination);
+
         writer[0] = h1;
         writer[1] = h2;
     }
@@ -191,11 +204,12 @@ public sealed class Murmur3F : Murmur3Base
         }
 
         Span<byte> buffer = stackalloc byte[16];
+
         buffer.Clear();
         tail.Slice(position, remainder).CopyTo(buffer);
 
         ulong k1 = MemoryMarshal.Read<ulong>(buffer);
-        ulong k2 = MemoryMarshal.Read<ulong>(buffer.Slice(8));
+        ulong k2 = MemoryMarshal.Read<ulong>(buffer[8..]);
 
         if (remainder > 8)
         {

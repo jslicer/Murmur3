@@ -49,6 +49,7 @@ public class Benchmark
     /// <summary>
     /// Initializes a new instance of the <see cref="Benchmark" /> class.
     /// </summary>
+    /// <exception cref="ArgumentNullException">buffer is <see langword="null" />.</exception>
     public Benchmark()
     {
         _data = new byte[N];
@@ -63,6 +64,7 @@ public class Benchmark
     /// Benchmark the Murmur3 32 x86 hashing algorithm variant.
     /// </summary>
     /// <returns>The resulting hash value of the random byte array.</returns>
+    /// <exception cref="ArgumentNullException">source is <see langword="null" />.</exception>
     [Benchmark]
     public bool Murmur3A()
     {
@@ -78,6 +80,7 @@ public class Benchmark
     /// Benchmark the Murmur3 128 x86 hashing algorithm variant.
     /// </summary>
     /// <returns>The resulting hash value of the random byte array.</returns>
+    /// <exception cref="ArgumentNullException">source is <see langword="null" />.</exception>
     [Benchmark]
     public bool Murmur3C()
     {
@@ -93,6 +96,7 @@ public class Benchmark
     /// Benchmark the Murmur3 128 x64 hashing algorithm variant.
     /// </summary>
     /// <returns>The resulting hash value of the random byte array.</returns>
+    /// <exception cref="ArgumentNullException">source is <see langword="null" />.</exception>
     [Benchmark]
     public bool Murmur3F()
     {
