@@ -57,8 +57,7 @@ public sealed class BogusMurmurTests1 : Murmur3TestsBase
     /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
     [TestMethod]
     public void EnsureHashOfNullCaught() =>
-        Assert.ThrowsExactly<InvalidOperationException>(() =>
-            TestSmHasher("The quick brown fox jumps over the lazy dog"));
+        Assert.ThrowsExactly<InvalidOperationException>(() => TestSmHasher("The quick brown fox jumps over the lazy dog"));
 
     /// <inheritdoc />
     /// <summary>
