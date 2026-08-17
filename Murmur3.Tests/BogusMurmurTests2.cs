@@ -56,8 +56,13 @@ public sealed class BogusMurmurTests2 : Murmur3TestsBase
     /// value.</exception>
     /// <exception cref="FormatException">value does not comply with the input pattern specified by style.</exception>
     [TestMethod]
-    public void EnsureBadConstructorCaught() => _ = Assert.ThrowsExactly<MissingMethodException>(() => TestSmHasher(
-        "The quick brown fox jumps over the lazy dog"));
+    public void EnsureBadConstructorCaught()
+    {
+#pragma warning disable IDE0022 // Use expression body for method
+        _ = Assert.ThrowsExactly<MissingMethodException>(() =>
+            TestSmHasher("The quick brown fox jumps over the lazy dog"));
+#pragma warning restore IDE0022 // Use expression body for method
+    }
 
     /// <inheritdoc />
     /// <summary>
