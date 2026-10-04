@@ -32,6 +32,11 @@ public class Benchmark
     private readonly byte[] _data;
 
     /// <summary>
+    /// The Murmur3 16-bit hasher.
+    /// </summary>
+    private readonly NonCryptographicHashAlgorithm _murmur3H = new Murmur3H();
+
+    /// <summary>
     /// The Murmur3 32 x86 hasher.
     /// </summary>
     private readonly NonCryptographicHashAlgorithm _murmur3A = new Murmur3A();
@@ -58,6 +63,22 @@ public class Benchmark
         Random.Shared.NextBytes(_data);
 #pragma warning restore SCS0005 // Weak random number generator.
 #pragma warning restore CA5394 // Do not use insecure randomness
+    }
+
+    /// <summary>
+    /// Benchmark the Murmur3 16-bit hashing algorithm variant.
+    /// </summary>
+    /// <returns>The resulting hash value of the random byte array.</returns>
+    /// <exception cref="ArgumentNullException">source is <see langword="null" />.</exception>
+    [Benchmark]
+    public bool Murmur3H()
+    {
+        _murmur3H.Reset();
+        _murmur3H.Append(_data);
+
+        Span<byte> hash16 = stackalloc byte[_murmur3H.HashLengthInBytes];
+
+        return _murmur3H.TryGetCurrentHash(hash16, out int bytesWritten) && bytesWritten == hash16.Length;
     }
 
     /// <summary>

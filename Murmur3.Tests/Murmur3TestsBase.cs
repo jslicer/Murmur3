@@ -30,10 +30,12 @@ using static Microsoft.VisualStudio.TestTools.UnitTesting.Assert;
 public abstract class Murmur3TestsBase
 #pragma warning restore CA1515 // Consider making public types internal
 {
+#pragma warning disable IDE1006 // Naming Styles
     /// <summary>
     /// The empty hash value used for testing.
     /// </summary>
     private static readonly byte[] _EmptyHash = new byte[4];
+#pragma warning restore IDE1006 // Naming Styles
 
     /// <summary>
     /// Type of the Murmur3 hashing algorithm variant.
@@ -197,8 +199,7 @@ public abstract class Murmur3TestsBase
             throw new InvalidOperationException("The algorithm type must be a descendant of Murmur3Base.");
         }
 
-        System.Reflection.ConstructorInfo? constructor =
-            _algType.GetConstructor([typeof(int)]);
+        System.Reflection.ConstructorInfo? constructor = _algType.GetConstructor([typeof(int)]);
 
         return constructor?.Invoke([seed]) as NonCryptographicHashAlgorithm;
     }

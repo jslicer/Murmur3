@@ -129,7 +129,7 @@ public sealed class Murmur3A : Murmur3Base
     /// <param name="x">The value to rotate.</param>
     /// <param name="r">The number of bits to rotate (maximum 32 bits).</param>
     /// <returns>The rotated value.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static uint RotateLeft(uint x, byte r) => (x << r) | (x >> (32 - r));
 
     /// <summary>
@@ -137,7 +137,7 @@ public sealed class Murmur3A : Murmur3Base
     /// </summary>
     /// <param name="k">The value to mix.</param>
     /// <returns>The mixed value.</returns>
-    [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static uint FMix(uint k)
     {
         //// ReSharper disable ComplexConditionExpression
@@ -154,7 +154,7 @@ public sealed class Murmur3A : Murmur3Base
     /// <param name="tail">The read-only span of bytes being hashed.</param>
     /// <param name="position">The position in the read-only span of bytes where the tail starts.</param>
     /// <param name="remainder">The number of bytes remaining to process.</param>
-    [MethodImpl(MethodImplOptions.AggressiveInlining | MethodImplOptions.AggressiveOptimization)]
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private void Tail(ReadOnlySpan<byte> tail, int position, int remainder)
     {
         if (remainder == 0)
